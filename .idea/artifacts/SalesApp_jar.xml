@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="SalesApp:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SalesApp_jar</output-path>
+    <root id="archive" name="SalesApp.jar">
+      <element id="module-output" name="SalesApp" />
+    </root>
+  </artifact>
+</component>
