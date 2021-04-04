@@ -5,10 +5,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.text.DecimalFormat;
 
 public class AddOps extends JFrame {
+    // Decimal formatting for currency
+    private final DecimalFormat df = new DecimalFormat("#0.00");
+
     private JPanel mainPanel;
     private JButton addButton;
     private JButton cancelButton;
@@ -44,7 +46,7 @@ public class AddOps extends JFrame {
 
         // Set visibility of components based on the type of menu it was called from.
         switch (menuType) {
-            case (0) -> {
+            case 0 -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -66,7 +68,7 @@ public class AddOps extends JFrame {
                 amountLabel.setVisible(false);
                 amountField.setVisible(false);
             }
-            case (1) -> {
+            case 1 -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -89,7 +91,7 @@ public class AddOps extends JFrame {
                 amountLabel.setVisible(true);
                 amountField.setVisible(true);
             }
-            case (2) -> {
+            case 2 -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -120,26 +122,35 @@ public class AddOps extends JFrame {
         payComboBox.addItem("Cash");
 
         // Panel Title
-        addTitle.setText("New record in " + menuType);
+        switch (menuType) {
+            case 0 -> addTitle.setText("New record in Inventory");
+            case 2 -> addTitle.setText("New record in Transactions");
+        }
 
         // Get all values present in all text fields and combo boxes
         addButton.addActionListener(e -> {
             switch (menuType) {
-                case (0) -> Inventory.addData(
+                case 0 -> {
+                    double tempVal = Double.parseDouble(priceField.getText());
+                    Inventory.addData(
                         idField.getText(),
                         nameField.getText(),
                         supplierField.getText(),
                         Integer.parseInt(stockField.getText()),
                         String.valueOf(locComboBox.getSelectedItem()),
-                        Double.parseDouble(priceField.getText())
-                );
-                case (1) -> Transactions.addData(
+                        Double.parseDouble(df.format(tempVal))
+                    );
+                }
+                case 1 -> {
+                    double tempVal = Double.parseDouble(amountField.getText());
+                    Transactions.addData(
                         idField.getText(),
                         nameField.getText(),
                         String.valueOf(payComboBox.getSelectedItem()),
                         cardField.getText(),
-                        Double.parseDouble(amountField.getText())
-                );
+                        Double.parseDouble(df.format(tempVal))
+                    );
+                }
             }
             dispose();
         });

@@ -3,10 +3,12 @@ package com.joker;
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class EditOps extends JFrame {
+    private final DecimalFormat df = new DecimalFormat("#0.00"); // Decimal formatting for currency
+
     private JLabel editTitle;
     private JLabel quantityLabel;
     private JTextField quantityField;
@@ -43,7 +45,7 @@ public class EditOps extends JFrame {
 
         // set visibility of components based on the menu
         switch (menuType) {
-            case (0):
+            case 0 -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -64,8 +66,8 @@ public class EditOps extends JFrame {
                 cardField.setVisible(false);
                 amountLabel.setVisible(false);
                 amountField.setVisible(false);
-                break;
-            case (1):
+            }
+            case 1 -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -87,8 +89,8 @@ public class EditOps extends JFrame {
                 amountLabel.setText("Amount Earned:");
                 amountLabel.setVisible(true);
                 amountField.setVisible(true);
-                break;
-            case (2):
+            }
+            case 2 -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -109,9 +111,7 @@ public class EditOps extends JFrame {
                 cardField.setVisible(true);
                 amountLabel.setVisible(true);
                 amountField.setVisible(true);
-                break;
-            default:
-                break;
+            }
         }
 
         // Add location and payment type combo box options
@@ -121,7 +121,11 @@ public class EditOps extends JFrame {
         payComboBox.addItem("Cash");
 
         // Panel Title
-        editTitle.setText("Edit record in " + menuType);
+        switch (menuType) {
+            case 0 -> editTitle.setText("Edit record in Inventory");
+            case 1 -> editTitle.setText("Edit record in Sales");
+            case 2 -> editTitle.setText("Edit record in Transactions");
+        }
 
         // List number of records present in the table
         for (int i = 0; i < inputArray0.size(); i++) {
@@ -140,7 +144,7 @@ public class EditOps extends JFrame {
                 locComboBox.setSelectedIndex(1);
             }
         }
-        priceField.setText(Double.toString(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
+        priceField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
         if (menuType == 2) {
             if (inputArray0.get(recComboBox.getSelectedIndex()).getPaymentType().equals("Credit Card")) {
                 payComboBox.setSelectedIndex(0);
@@ -152,19 +156,15 @@ public class EditOps extends JFrame {
         cardField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber());
         if (menuType == 1) {
             if (!inputArray1.isEmpty()) {
-                amountField.setText(
-                        Double.toString(
-                                inputArray1.get(recComboBox.getSelectedIndex()).getQuantity() *
-                                        inputArray0.get(recComboBox.getSelectedIndex()).getPrice()
-                        )
-                );
+                amountField.setText(df.format(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity() *
+                        inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
             }
         }
         if (menuType == 1) {
             quantityField.setText(Integer.toString(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity()));
-            amountField.setText(Double.toString(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
+            amountField.setText(df.format(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
         } else {
-            amountField.setText(Double.toString(inputArray0.get(recComboBox.getSelectedIndex()).getAmount()));
+            amountField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getAmount()));
         }
         // Disable text field editing of inventory data for Sales menu
         if (menuType == 1) {
@@ -202,7 +202,7 @@ public class EditOps extends JFrame {
                     locComboBox.setSelectedIndex(1);
                 }
             }
-            priceField.setText(Double.toString(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
+            priceField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
             if (menuType == 2) {
                 if (inputArray0.get(recComboBox.getSelectedIndex()).getPaymentType().equals("Credit Card")) {
                     payComboBox.setSelectedIndex(0);
@@ -213,19 +213,15 @@ public class EditOps extends JFrame {
             cardField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber());
             if (menuType == 1) {
                 if (!inputArray1.isEmpty()) {
-                    amountField.setText(
-                            Double.toString(
-                                    inputArray1.get(recComboBox.getSelectedIndex()).getQuantity() *
-                                            inputArray0.get(recComboBox.getSelectedIndex()).getPrice()
-                            )
-                    );
+                    amountField.setText(df.format(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity() *
+                            inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
                 }
             }
             if (menuType == 1) {
                 quantityField.setText(Integer.toString(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity()));
-                amountField.setText(Double.toString(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
+                amountField.setText(df.format(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
             } else {
-                amountField.setText(Double.toString(inputArray0.get(recComboBox.getSelectedIndex()).getAmount()));
+                amountField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getAmount()));
             }
             // Disable text field editing of inventory data for Sales menu
             if (menuType == 1) {
@@ -254,7 +250,7 @@ public class EditOps extends JFrame {
 
         editButton.addActionListener(e -> {
             switch (menuType) {
-                case (0) -> Inventory.editData(
+                case 0 -> Inventory.editData(
                         recComboBox.getSelectedIndex(),
                         idField.getText(),
                         nameField.getText(),
@@ -263,7 +259,7 @@ public class EditOps extends JFrame {
                         String.valueOf(locComboBox.getSelectedItem()),
                         Double.parseDouble(priceField.getText())
                 );
-                case (1) -> Sales.editData(
+                case 1 -> Sales.editData(
                         recComboBox.getSelectedIndex(),
                         idField.getText(),
                         nameField.getText(),
@@ -272,7 +268,7 @@ public class EditOps extends JFrame {
                         Integer.parseInt(quantityField.getText()),
                         Double.parseDouble(amountField.getText())
                 );
-                case (2) -> Transactions.editData(
+                case 2 -> Transactions.editData(
                         recComboBox.getSelectedIndex(),
                         idField.getText(),
                         nameField.getText(),
@@ -291,7 +287,9 @@ public class EditOps extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 stockField.setEditable(
-                        e.getKeyChar() >= '0' && e.getKeyChar() <= '9' || e.getKeyCode() == KeyEvent.VK_BACK_SPACE
+                        e.getKeyChar() >= '0' &&
+                        e.getKeyChar() <= '9' ||
+                        e.getKeyCode() == KeyEvent.VK_BACK_SPACE
                 );
             }
         });
@@ -300,7 +298,10 @@ public class EditOps extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 priceField.setEditable(
-                        e.getKeyChar() >= '0' && e.getKeyChar() <= '9' || e.getKeyChar() == '.' || e.getKeyCode() == KeyEvent.VK_BACK_SPACE
+                        e.getKeyChar() >= '0' &&
+                        e.getKeyChar() <= '9' ||
+                        e.getKeyChar() == '.' ||
+                        e.getKeyCode() == KeyEvent.VK_BACK_SPACE
                 );
             }
         });
@@ -310,8 +311,8 @@ public class EditOps extends JFrame {
             public void keyPressed(KeyEvent e) {
                 quantityField.setEditable(
                         e.getKeyChar() >= '0' && e.getKeyChar() <= '9' ||
-                                e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
-                                e.getKeyCode() == KeyEvent.VK_ENTER
+                        e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
+                        e.getKeyCode() == KeyEvent.VK_ENTER
                 );
             }
         });
@@ -321,8 +322,8 @@ public class EditOps extends JFrame {
             public void keyPressed(KeyEvent e) {
                 cardField.setEditable(
                         e.getKeyChar() >= '0' && e.getKeyChar() <= '9' ||
-                                e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
-                                e.getKeyCode() == KeyEvent.VK_ENTER
+                        e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
+                        e.getKeyCode() == KeyEvent.VK_ENTER
                 );
             }
         });
@@ -332,9 +333,9 @@ public class EditOps extends JFrame {
             public void keyPressed(KeyEvent e) {
                 amountField.setEditable(
                         e.getKeyChar() >= '0' &&e.getKeyChar() <= '9' ||
-                                e.getKeyChar() == '.' ||
-                                e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
-                                e.getKeyCode() == KeyEvent.VK_ENTER
+                        e.getKeyChar() == '.' ||
+                        e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
+                        e.getKeyCode() == KeyEvent.VK_ENTER
                 );
             }
         });
@@ -343,12 +344,9 @@ public class EditOps extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    amountField.setText(
-                            Double.toString(
-                            Double.parseDouble(quantityField.getText()) *
-                                    inputArray0.get(recComboBox.getSelectedIndex()).getPrice()
-                            )
-                    );
+                    double tempVal = Double.parseDouble(quantityField.getText()) *
+                            inputArray0.get(recComboBox.getSelectedIndex()).getPrice();
+                    amountField.setText(String.valueOf(df.format(tempVal)));
                 }
             }
         });

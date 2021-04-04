@@ -4,11 +4,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.io.*;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Inventory extends JFrame {
+    private static final DecimalFormat df = new DecimalFormat("#0.00"); // Decimal formatting for currency
     private static final FileOps invFile = new FileOps(); // FileOps object
     private static DataTypes data;
     private static final ArrayList<DataTypes> invArray = new ArrayList<>();
@@ -161,7 +163,7 @@ public class Inventory extends JFrame {
             row[3] = invArray.get(i).getSupplier();
             row[4] = invArray.get(i).getStock();
             row[5] = invArray.get(i).getLocation();
-            row[6] = invArray.get(i).getPrice();
+            row[6] = df.format(invArray.get(i).getPrice());
             tableData.addRow(row);
         }
     }
@@ -287,7 +289,7 @@ public class Inventory extends JFrame {
                     .append(",")
                     .append(dataTypes.getLocation())
                     .append(",")
-                    .append(Double.toString(dataTypes.getPrice()))
+                    .append(df.format(dataTypes.getPrice()))
                     .append("\n");
         }
         System.out.println("Saving changes to inventory.csv ...");

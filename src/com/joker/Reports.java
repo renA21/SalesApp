@@ -4,12 +4,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Reports extends JFrame {
+    private static final DecimalFormat df = new DecimalFormat("#0.00"); // Decimal formatting for currency
     private static final FileOps invFile = new FileOps();
     private static final FileOps salesFile = new FileOps(); // FileOps object
     private static final FileOps transactionsFile  = new FileOps();
@@ -293,9 +295,9 @@ public class Reports extends JFrame {
             salesRow[1] = invArray.get(i).getID();
             salesRow[2] = invArray.get(i).getName();
             salesRow[3] = invArray.get(i).getSupplier();
-            salesRow[4] = invArray.get(i).getPrice();
+            salesRow[4] = df.format(invArray.get(i).getPrice());
             salesRow[5] = salesArray.get(i).getQuantity();
-            salesRow[6] = salesArray.get(i).getAmount();
+            salesRow[6] = df.format(salesArray.get(i).getAmount());
             tableData0.addRow(salesRow);
         }
 
@@ -305,7 +307,7 @@ public class Reports extends JFrame {
             transactionsRow[2] = transactionsArray.get(i).getName();
             transactionsRow[3] = transactionsArray.get(i).getPaymentType();
             transactionsRow[4] = transactionsArray.get(i).getCardNumber();
-            transactionsRow[5] = transactionsArray.get(i).getAmount();
+            transactionsRow[5] = df.format(transactionsArray.get(i).getAmount());
             tableData1.addRow(transactionsRow);
         }
     }
@@ -317,6 +319,8 @@ public class Reports extends JFrame {
         if (!invFile.getBuffer().isEmpty() && invFile.getBuffer().get(0).get(0).equals("ID")) {
             invFile.getBuffer().remove(0);
         }
+
+        System.out.println(invFile.getBuffer().get(0).get(5));
 
         for (int i = 0; i < invFile.getBuffer().size(); i++) {
             data = new DataTypes();
@@ -334,8 +338,6 @@ public class Reports extends JFrame {
             data.setAmount(0);
             salesArray.add(data);
         }
-
-        // TODO: file handling per month/ wildcard rules
 
         for (int i = 0; i <= 31; i++) {
             if (i < 10) {
@@ -376,7 +378,12 @@ public class Reports extends JFrame {
         }
         for (int i = 0; i < invArray.size(); i++) {
             data = new DataTypes();
-            data.setQuantity(Integer.parseInt(salesFile.getBuffer().get(i).get(4)));
+            // Set quantity to zero to fill in non-existent sales data
+            if (i >= salesFile.getBuffer().size()) {
+                data.setQuantity(0);
+            } else {
+                data.setQuantity(Integer.parseInt(salesFile.getBuffer().get(i).get(4)));
+            }
             inputSalesArray.add(data);
         }
         salesFile.getBuffer().clear();
@@ -390,9 +397,9 @@ public class Reports extends JFrame {
     }
 
     private static void total() {
-        for (int i = 0; i < salesArray.size(); i++) {
-            totalQuantity += salesArray.get(i).getQuantity();
-            totalPrice += salesArray.get(i).getAmount();
+        for (DataTypes dataTypes : salesArray) {
+            totalQuantity += dataTypes.getQuantity();
+            totalPrice += dataTypes.getAmount();
         }
 
     }
@@ -461,11 +468,11 @@ public class Reports extends JFrame {
 
     private static void printTransactionsTable() {
         // Table headers
-        System.out.println("-------------------------------------------------------------------------------");
-        System.out.printf("| %10s | %10s | %10s | %10s | %10s | %10s |\n",
+        System.out.println("--------------------------------------------------------------------------------");
+        System.out.printf("| %10s | %10s | %10s | %11s | %10s | %10s |\n",
                 "Record #", "ID", "Name", "Pay Type", "Card Num", "Amount"
         );
-        System.out.println("-------------------------------------------------------------------------------");
+        System.out.println("--------------------------------------------------------------------------------");
 
         if (transactionsFile.getBuffer().isEmpty() && transactionsArray.isEmpty()) {
 
@@ -479,7 +486,7 @@ public class Reports extends JFrame {
         } else {
             for (int i = 0; i < transactionsArray.size(); i++) {
 
-                System.out.printf("| %10s | %10s | %10s | %10s | %10s | %10.2f |\n",
+                System.out.printf("| %10s | %10s | %10s | %11s | %10s | %10.2f |\n",
                         i,
                         transactionsArray.get(i).getID(),
                         transactionsArray.get(i).getName(),
@@ -489,7 +496,7 @@ public class Reports extends JFrame {
                 );
             }
         }
-        System.out.println("-------------------------------------------------------------------------------");
+        System.out.println("--------------------------------------------------------------------------------");
     }
 
     public static void launchUI() throws IOException {

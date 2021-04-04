@@ -6,12 +6,14 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Sales extends JFrame {
+    private static final DecimalFormat df = new DecimalFormat("#0.00"); // Decimal formatting for currency
     private static final FileOps invFile = new FileOps(); // FileOps object
     private static final FileOps salesFile = new FileOps(); // FileOps object
     private static DataTypes data;
@@ -242,9 +244,9 @@ public class Sales extends JFrame {
             row[1] = invArray.get(i).getID();
             row[2] = invArray.get(i).getName();
             row[3] = invArray.get(i).getSupplier();
-            row[4] = invArray.get(i).getPrice();
+            row[4] = df.format(invArray.get(i).getPrice());
             row[5] = salesArray.get(i).getQuantity();
-            row[6] = salesArray.get(i).getAmount();
+            row[6] = df.format(salesArray.get(i).getAmount());
             tableData.addRow(row);
         }
     }
@@ -386,11 +388,11 @@ public class Sales extends JFrame {
                     .append(",")
                     .append(invArray.get(i).getSupplier())
                     .append(",")
-                    .append(Double.toString(invArray.get(i).getPrice()))
+                    .append(df.format(invArray.get(i).getPrice()))
                     .append(",")
                     .append(Integer.toString(salesArray.get(i).getQuantity()))
                     .append(",")
-                    .append(Double.toString(salesArray.get(i).getAmount()))
+                    .append(df.format(salesArray.get(i).getAmount()))
                     .append("\n");
         }
         System.out.println("Saving changes to " + "sales_" + fileDate + ".csv ...");

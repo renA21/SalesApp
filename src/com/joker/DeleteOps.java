@@ -1,9 +1,12 @@
 package com.joker;
 
 import javax.swing.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class DeleteOps extends JFrame {
+    private final DecimalFormat df = new DecimalFormat("#0.00"); // Decimal formatting for currency
+
     private JLabel deleteTitle;
     private JLabel quantityLabel;
     private JTextField quantityField;
@@ -41,7 +44,7 @@ public class DeleteOps extends JFrame {
 
         // set visibility of components based on the menu
         switch (menuType) {
-            case (0):
+            case 0 -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -62,8 +65,8 @@ public class DeleteOps extends JFrame {
                 cardField.setVisible(false);
                 amountLabel.setVisible(false);
                 amountField.setVisible(false);
-                break;
-            case (1):
+            }
+            case 1 -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -85,8 +88,8 @@ public class DeleteOps extends JFrame {
                 amountLabel.setText("Amount Earned:");
                 amountLabel.setVisible(true);
                 amountField.setVisible(true);
-                break;
-            case (2):
+            }
+            case 2 -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -107,19 +110,17 @@ public class DeleteOps extends JFrame {
                 cardField.setVisible(true);
                 amountLabel.setVisible(true);
                 amountField.setVisible(true);
-                break;
-            default:
-                break;
+            }
         }
 
-        // Panel Title/Records are not deleted in Sales, rather, cleared.
-        if (menuType == 0) {
-            deleteTitle.setText("Delete record in Inventory");
-        } else if (menuType == 1) {
-            deleteTitle.setText("Clear record in Sales");
-            deleteLabel.setText("Please choose the Record # you wish to clear:");
-        } else if (menuType == 2) {
-            deleteTitle.setText("Delete record in Transactions");
+        // Panel Title / Records are not deleted in Sales, rather, cleared.
+        switch (menuType) {
+            case 0 -> deleteTitle.setText("Delete record in Inventory");
+            case 1 -> {
+                deleteTitle.setText("Clear record in Sales");
+                deleteLabel.setText("Please choose the Record # you wish to clear:");
+            }
+            case 2 -> deleteTitle.setText("Delete record in Transactions");
         }
 
         // List number of records present in the table
@@ -147,14 +148,14 @@ public class DeleteOps extends JFrame {
         supplierField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getSupplier());
         stockField.setText(Integer.toString(inputArray0.get(recComboBox.getSelectedIndex()).getStock()));
         locationField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getLocation());
-        priceField.setText(Double.toString(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
+        priceField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
         payTypeField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getPaymentType());
         cardField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber());
         if (menuType == 1) {
             quantityField.setText(Integer.toString(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity()));
-            amountField.setText(Double.toString(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
+            amountField.setText(df.format(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
         } else {
-            amountField.setText(Double.toString(inputArray0.get(recComboBox.getSelectedIndex()).getAmount()));
+            amountField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getAmount()));
         }
 
         recComboBox.addActionListener(e -> {
@@ -175,14 +176,14 @@ public class DeleteOps extends JFrame {
             supplierField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getSupplier());
             stockField.setText(Integer.toString(inputArray0.get(recComboBox.getSelectedIndex()).getStock()));
             locationField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getLocation());
-            priceField.setText(Double.toString(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
+            priceField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
             payTypeField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getPaymentType());
             cardField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber());
             if (menuType == 1) {
                 quantityField.setText(Integer.toString(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity()));
-                amountField.setText(Double.toString(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
+                amountField.setText(df.format(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
             } else {
-                amountField.setText(Double.toString(inputArray0.get(recComboBox.getSelectedIndex()).getAmount()));
+                amountField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getAmount()));
             }
         });
 
@@ -192,9 +193,9 @@ public class DeleteOps extends JFrame {
 
         deleteButton.addActionListener(e -> {
             switch (menuType) {
-                case (0) -> Inventory.deleteData(recComboBox.getSelectedIndex());
-                case (1) -> Sales.deleteData(recComboBox.getSelectedIndex());
-                case (2) -> Transactions.deleteData(recComboBox.getSelectedIndex());
+                case 0 -> Inventory.deleteData(recComboBox.getSelectedIndex());
+                case 1 -> Sales.deleteData(recComboBox.getSelectedIndex());
+                case 2 -> Transactions.deleteData(recComboBox.getSelectedIndex());
             }
             dispose();
         });

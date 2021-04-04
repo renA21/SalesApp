@@ -6,12 +6,14 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Transactions extends JFrame {
+    private static final DecimalFormat df = new DecimalFormat("#0.00"); // Decimal formatting for currency
     private static final FileOps transactionsFile = new FileOps(); // FileOps object
     private static DataTypes data;
     private static final ArrayList<DataTypes> transactionsArray = new ArrayList<>();
@@ -238,7 +240,7 @@ public class Transactions extends JFrame {
             row[2] = transactionsArray.get(i).getName();
             row[3] = transactionsArray.get(i).getPaymentType();
             row[4] = transactionsArray.get(i).getCardNumber();
-            row[5] = transactionsArray.get(i).getAmount();
+            row[5] = df.format(transactionsArray.get(i).getAmount());
             tableData.addRow(row);
         }
     }
@@ -264,11 +266,11 @@ public class Transactions extends JFrame {
 
     private static void printTable() {
         // Table headers
-        System.out.println("-------------------------------------------------------------------------------");
-        System.out.printf("| %10s | %10s | %10s | %10s | %10s | %10s |\n",
+        System.out.println("--------------------------------------------------------------------------------");
+        System.out.printf("| %10s | %10s | %10s | %11s | %10s | %10s |\n",
                 "Record #", "ID", "Name", "Pay Type", "Card Num", "Amount"
         );
-        System.out.println("-------------------------------------------------------------------------------");
+        System.out.println("--------------------------------------------------------------------------------");
 
         if (transactionsFile.getBuffer().isEmpty() && transactionsArray.isEmpty()) {
 
@@ -282,7 +284,7 @@ public class Transactions extends JFrame {
         } else {
             for (int i = 0; i < transactionsArray.size(); i++) {
 
-                System.out.printf("| %10s | %10s | %10s | %10s | %10s | %10.2f |\n",
+                System.out.printf("| %10s | %10s | %10s | %11s | %10s | %10.2f |\n",
                         i,
                         transactionsArray.get(i).getID(),
                         transactionsArray.get(i).getName(),
@@ -292,7 +294,7 @@ public class Transactions extends JFrame {
                 );
             }
         }
-        System.out.println("-------------------------------------------------------------------------------");
+        System.out.println("--------------------------------------------------------------------------------");
     }
 
     public static void addData(
@@ -358,7 +360,7 @@ public class Transactions extends JFrame {
                     .append(",")
                     .append(dataTypes.getCardNumber())
                     .append(",")
-                    .append(Double.toString(dataTypes.getAmount()))
+                    .append(df.format(dataTypes.getAmount()))
                     .append("\n");
         }
         System.out.println("Saving changes to transactions_" + fileDate + ".csv ...");
