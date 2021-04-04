@@ -4,11 +4,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.spi.AbstractResourceBundleProvider;
 
 public class Reports extends JFrame {
     private static final DecimalFormat df = new DecimalFormat("#0.00"); // Decimal formatting for currency
@@ -315,6 +317,15 @@ public class Reports extends JFrame {
     private static void reports() throws IOException {
         invFile.setFile(Main.dataDir,"inventory.csv");
 
+        if (!invFile.existence) {
+            JFrame error = new JFrame();
+            JOptionPane.showMessageDialog(error,
+                    "Unable to generate a report. The Inventory database is missing." +
+                            "\nTry to add some inventory records and try again.",
+                    "Error", JOptionPane.ERROR_MESSAGE
+            );
+        }
+
         // Remove first row if column headers exist
         if (!invFile.getBuffer().isEmpty() && invFile.getBuffer().get(0).get(0).equals("ID")) {
             invFile.getBuffer().remove(0);
@@ -439,12 +450,14 @@ public class Reports extends JFrame {
         );
         System.out.println("--------------------------------------------------------------------------------------------");
 
-        if (invFile.getBuffer().isEmpty() && invArray.isEmpty()) {
-            System.out.println("WARNING: Database is empty. There are no records in this database.");
+        if (salesFile.getBuffer().isEmpty() || salesArray.isEmpty()) {
+            System.out.println("WARNING: File not found or Sales database is empty. " +
+                    "There are no records for quantity during the selected month/year.");
             JFrame alert = new JFrame();
             JOptionPane.showMessageDialog(
                     alert,
-                    "File not found or database is empty. There are no records in this database.",
+                    "File not found or Sales database is empty." +
+                            "\nThere are no records for quantity during the selected month/year.",
                     "Alert", JOptionPane.WARNING_MESSAGE
             );
         } else {
@@ -476,11 +489,13 @@ public class Reports extends JFrame {
 
         if (transactionsFile.getBuffer().isEmpty() && transactionsArray.isEmpty()) {
 
-            System.out.println("WARNING: Transactions database is empty. There are no records in this database.");
+            System.out.println("WARNING: Transactions database is empty. " +
+                    "There are no records during the selected month/year.");
             JFrame alert = new JFrame();
             JOptionPane.showMessageDialog(
                     alert,
-                    "File not found or Transactions database is empty. There are no records in this database.",
+                    "File not found or Transactions database is empty." +
+                            "\nThere are no records during the selected month/year.",
                     "Alert", JOptionPane.WARNING_MESSAGE
             );
         } else {
