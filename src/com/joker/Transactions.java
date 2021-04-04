@@ -77,7 +77,7 @@ public class Transactions extends JFrame {
 
         // Show current table date
         tableDateLabel.setText("Date: " + fileDate);
-        readFile.setText("Read File: transactions_" + fileDate + ".csv");
+        readFile.setText("File: transactions_" + fileDate + ".csv");
 
         // Clear columns of JTable beforehand
         tableData.setColumnCount(0);

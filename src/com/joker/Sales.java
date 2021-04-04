@@ -78,7 +78,7 @@ public class Sales extends JFrame {
 
         // Show current table date
         tableDateLabel.setText("Date: " + fileDate);
-        readFile.setText("Read File: sales_" + fileDate + ".csv");
+        readFile.setText("File: sales_" + fileDate + ".csv");
 
         tableData.setColumnCount(0);
 

@@ -64,7 +64,7 @@ public class Inventory extends JFrame {
             dateLabel.setText(formatTime.format(d));
         }).start();
 
-        readFile.setText("Read File: inventory.csv");
+        readFile.setText("File: inventory.csv");
 
         tableData.setColumnCount(0);
 
