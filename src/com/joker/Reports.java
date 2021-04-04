@@ -4,25 +4,24 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.spi.AbstractResourceBundleProvider;
 
 public class Reports extends JFrame {
-    private static final DecimalFormat df = new DecimalFormat("#0.00"); // Decimal formatting for currency
+    private static final DecimalFormat currencyFormat = new DecimalFormat("#0.00"); // Currency format
+    private static final DecimalFormat dayFormat = new DecimalFormat("00");
     private static final FileOps invFile = new FileOps();
-    private static final FileOps salesFile = new FileOps(); // FileOps object
+    private static final FileOps salesFile = new FileOps();
     private static final FileOps transactionsFile  = new FileOps();
     private static DataTypes data;
     private static final ArrayList<DataTypes> invArray = new ArrayList<>();
     private static final ArrayList<DataTypes> salesArray = new ArrayList<>();
     private static final ArrayList<DataTypes> inputSalesArray = new ArrayList<>();
     private static final ArrayList<DataTypes> transactionsArray = new ArrayList<>();
-    private static final boolean saved = true; // flag that determines whether changes have been made to the table
+    private static final boolean saved = true; // Flag that determines whether changes have been made to the table
     private static final DefaultTableModel tableData0 = new DefaultTableModel();
     private static final DefaultTableModel tableData1 = new DefaultTableModel();
     private static final Object[] salesRow = new Object[7];
@@ -32,8 +31,8 @@ public class Reports extends JFrame {
     private static double totalRevenue = 0;
     private static LocalDate currentDate;
     private static String fileDate;
-    private static String selectedYear;
-    private static String selectedMonth;
+    private static int selectedYear;
+    private static int selectedMonth;
     private static int prevYearCount = 0;
     private static int nextYearCount = 0;
     private static int prevMonthCount = 0;
@@ -150,9 +149,9 @@ public class Reports extends JFrame {
             prevYearCount = 0;
             nextMonthCount = 0;
             prevMonthCount = 0;
-            selectedYear = String.valueOf(currentDate.getYear());
-            selectedMonth = String.valueOf(currentDate.getMonthValue());
-            fileDate = selectedYear + "-" + selectedMonth;
+            selectedYear = currentDate.getYear();
+            selectedMonth = currentDate.getMonthValue();
+            fileDate = selectedYear + "-" + dayFormat.format(selectedMonth);
             tableDateLabel.setText("Date: " + fileDate);
             try {
                 // Clear all arrays
@@ -176,12 +175,12 @@ public class Reports extends JFrame {
         previousYearButton.addActionListener(e -> {
             if (nextYearCount != 0) {
                 nextYearCount--;
-                selectedYear = String.valueOf(currentDate.plusYears(nextYearCount).getYear());
+                selectedYear = currentDate.plusYears(nextYearCount).getYear();
             } else {
                 prevYearCount++;
-                selectedYear = String.valueOf(currentDate.minusYears(prevYearCount).getYear());
+                selectedYear = currentDate.minusYears(prevYearCount).getYear();
             }
-            fileDate = selectedYear + "-" + selectedMonth;
+            fileDate = selectedYear + "-" + dayFormat.format(selectedMonth);
             tableDateLabel.setText("Date: " + fileDate);
             try {
                 // Clear all arrays
@@ -206,12 +205,12 @@ public class Reports extends JFrame {
             nextYearButton.setEnabled(true);
             if (prevYearCount != 0) {
                 prevYearCount--;
-                selectedYear = String.valueOf(currentDate.minusYears(prevYearCount).getYear());
+                selectedYear = currentDate.minusYears(prevYearCount).getYear();
             } else {
                 nextYearCount++;
-                selectedYear = String.valueOf(currentDate.plusYears(nextYearCount).getYear());
+                selectedYear = currentDate.plusYears(nextYearCount).getYear();
             }
-            fileDate = selectedYear + "-" + selectedMonth;
+            fileDate = selectedYear + "-" + dayFormat.format(selectedMonth);
             tableDateLabel.setText("Date: " + fileDate);
             try {
                 // Clear all arrays
@@ -235,12 +234,12 @@ public class Reports extends JFrame {
         previousMonthButton.addActionListener(e -> {
             if (nextMonthCount != 0) {
                 nextMonthCount--;
-                selectedMonth = String.valueOf(currentDate.plusMonths(nextMonthCount).getMonthValue());
+                selectedMonth = currentDate.plusMonths(nextMonthCount).getMonthValue();
             } else {
                 prevMonthCount++;
-                selectedMonth = String.valueOf(currentDate.minusMonths(prevMonthCount).getMonthValue());
+                selectedMonth = currentDate.minusMonths(prevMonthCount).getMonthValue();
             }
-            fileDate = selectedYear + "-" + selectedMonth;
+            fileDate = selectedYear + "-" + dayFormat.format(selectedMonth);
             tableDateLabel.setText("Date: " + fileDate);
             try {
                 // Clear all arrays
@@ -264,12 +263,12 @@ public class Reports extends JFrame {
         nextMonthButton.addActionListener(e -> {
             if (prevMonthCount != 0) {
                 prevMonthCount--;
-                selectedMonth = String.valueOf(currentDate.minusMonths(prevMonthCount).getMonthValue());
+                selectedMonth = currentDate.minusMonths(prevMonthCount).getMonthValue();
             } else {
                 nextMonthCount++;
-                selectedMonth = String.valueOf(currentDate.plusMonths(nextMonthCount).getMonthValue());
+                selectedMonth = currentDate.plusMonths(nextMonthCount).getMonthValue();
             }
-            fileDate = selectedYear + "-" + selectedMonth;
+            fileDate = selectedYear + "-" + dayFormat.format(selectedMonth);
             tableDateLabel.setText("Date: " + fileDate);
             try {
                 // Clear all arrays
@@ -297,9 +296,9 @@ public class Reports extends JFrame {
             salesRow[1] = invArray.get(i).getID();
             salesRow[2] = invArray.get(i).getName();
             salesRow[3] = invArray.get(i).getSupplier();
-            salesRow[4] = df.format(invArray.get(i).getPrice());
+            salesRow[4] = currencyFormat.format(invArray.get(i).getPrice());
             salesRow[5] = salesArray.get(i).getQuantity();
-            salesRow[6] = df.format(salesArray.get(i).getAmount());
+            salesRow[6] = currencyFormat.format(salesArray.get(i).getAmount());
             tableData0.addRow(salesRow);
         }
 
@@ -309,7 +308,7 @@ public class Reports extends JFrame {
             transactionsRow[2] = transactionsArray.get(i).getName();
             transactionsRow[3] = transactionsArray.get(i).getPaymentType();
             transactionsRow[4] = transactionsArray.get(i).getCardNumber();
-            transactionsRow[5] = df.format(transactionsArray.get(i).getAmount());
+            transactionsRow[5] = currencyFormat.format(transactionsArray.get(i).getAmount());
             tableData1.addRow(transactionsRow);
         }
     }
@@ -351,16 +350,15 @@ public class Reports extends JFrame {
         }
 
         for (int i = 0; i <= 31; i++) {
-            if (i < 10) {
-                salesFile.setFile(Main.salesDir,
-                        // HACK: formatting 0 for selected months with single digits
-                        "sales_" + selectedYear + "-0" + selectedMonth + "-0" + i + ".csv"
-                );
-            } else {
-                salesFile.setFile(Main.salesDir,
-                        "sales_" + selectedYear + "-0" + selectedMonth + "-" + i + ".csv"
-                );
-            }
+            salesFile.setFile(Main.salesDir,
+                    "sales_" +
+                    selectedYear +
+                    "-" +
+                    dayFormat.format(selectedMonth) +
+                    "-" +
+                    dayFormat.format(i) +
+                    ".csv"
+            );
             if (!salesFile.existence) {
                 continue;
             }
@@ -368,15 +366,14 @@ public class Reports extends JFrame {
         }
 
         for (int i = 1; i <= 31; i++) {
-            if (i < 10) {
-                transactionsFile.setFile(Main.transactionsDir,
-                        "transactions_" + selectedYear + "-0" + selectedMonth + "-0" + i + ".csv"
-                );
-            } else {
-                transactionsFile.setFile(Main.transactionsDir,
-                        "transactions_" + selectedYear + "-0" + selectedMonth + "-" + i + ".csv"
-                );
-            }
+            transactionsFile.setFile(Main.transactionsDir,"transactions_" +
+                    selectedYear +
+                    "-" +
+                    dayFormat.format(selectedMonth) +
+                    "-" +
+                    dayFormat.format(i) +
+                    ".csv"
+            );
             transactions();
         }
     }
@@ -450,7 +447,7 @@ public class Reports extends JFrame {
         );
         System.out.println("--------------------------------------------------------------------------------------------");
 
-        if (salesFile.getBuffer().isEmpty() || salesArray.isEmpty()) {
+        if (salesFile.getBuffer().isEmpty() && salesArray.isEmpty()) {
             System.out.println("WARNING: File not found or Sales database is empty. " +
                     "There are no records for quantity during the selected month/year.");
             JFrame alert = new JFrame();
@@ -518,9 +515,9 @@ public class Reports extends JFrame {
         System.out.println("=====REPORTS MENU=====");
         // Default to today's time
         currentDate = LocalDate.now();
-        fileDate = currentDate.getYear() + "-" + currentDate.getMonthValue();
-        selectedYear = String.valueOf(currentDate.getYear());
-        selectedMonth = String.valueOf(currentDate.getMonthValue());
+        fileDate = currentDate.getYear() + "-" + dayFormat.format(currentDate.getMonthValue());
+        selectedYear = currentDate.getYear();
+        selectedMonth = currentDate.getMonthValue();
         reports();
         printSalesTable();
         printTransactionsTable();

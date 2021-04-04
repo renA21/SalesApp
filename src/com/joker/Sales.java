@@ -13,25 +13,20 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Sales extends JFrame {
-    private static final DecimalFormat df = new DecimalFormat("#0.00"); // Decimal formatting for currency
-    private static final FileOps invFile = new FileOps(); // FileOps object
-    private static final FileOps salesFile = new FileOps(); // FileOps object
+    private static final DecimalFormat currencyFormat = new DecimalFormat("#0.00"); // Currency format
+    private static final FileOps invFile = new FileOps();
+    private static final FileOps salesFile = new FileOps();
     private static DataTypes data;
     private static final ArrayList<DataTypes> invArray = new ArrayList<>();
     private static final ArrayList<DataTypes> salesArray = new ArrayList<>();
-    private static boolean saved = true; // flag that determines whether changes have been made to the table
+    private static boolean saved = true; // Flag that determines whether changes have been made to the table
     private static final DefaultTableModel tableData = new DefaultTableModel();
     private static final Object[] row = new Object[7];
     private static LocalDate currentDate = LocalDate.now();
     private static String fileDate;
     private static int prevDayCount = 0;
     private static int nextDayCount = 0;
-    /**
-     * menuType = 0 -> Inventory
-     * menuType = 1 -> Sales
-     * menuType = 2 -> Transactions
-     */
-    private static final int menuType = 1;
+    private static final int menuType = 1; // 0 = Inventory, 1 = Sales, 2 = Transactions
 
     private JPanel mainPanel;
     private JButton menuButton;
@@ -244,9 +239,9 @@ public class Sales extends JFrame {
             row[1] = invArray.get(i).getID();
             row[2] = invArray.get(i).getName();
             row[3] = invArray.get(i).getSupplier();
-            row[4] = df.format(invArray.get(i).getPrice());
+            row[4] = currencyFormat.format(invArray.get(i).getPrice());
             row[5] = salesArray.get(i).getQuantity();
-            row[6] = df.format(salesArray.get(i).getAmount());
+            row[6] = currencyFormat.format(salesArray.get(i).getAmount());
             tableData.addRow(row);
         }
     }
@@ -388,11 +383,11 @@ public class Sales extends JFrame {
                     .append(",")
                     .append(invArray.get(i).getSupplier())
                     .append(",")
-                    .append(df.format(invArray.get(i).getPrice()))
+                    .append(currencyFormat.format(invArray.get(i).getPrice()))
                     .append(",")
                     .append(Integer.toString(salesArray.get(i).getQuantity()))
                     .append(",")
-                    .append(df.format(salesArray.get(i).getAmount()))
+                    .append(currencyFormat.format(salesArray.get(i).getAmount()))
                     .append("\n");
         }
         System.out.println("Saving changes to " + "sales_" + fileDate + ".csv ...");
