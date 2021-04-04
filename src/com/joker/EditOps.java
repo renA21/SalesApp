@@ -34,11 +34,7 @@ public class EditOps extends JFrame {
     private JLabel recordLabel;
     private JComboBox recComboBox;
 
-    public EditOps(String title,
-                   String menuType,
-                   ArrayList<DataTypes> inputArray0,
-                   ArrayList<DataTypes> inputArray1)
-    {
+    public EditOps(String title, int menuType, ArrayList<DataTypes> inputArray0, ArrayList<DataTypes> inputArray1) {
         super(title);
         this.setContentPane(mainPanel);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -47,7 +43,7 @@ public class EditOps extends JFrame {
 
         // set visibility of components based on the menu
         switch (menuType) {
-            case ("Inventory"):
+            case (0):
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -69,7 +65,7 @@ public class EditOps extends JFrame {
                 amountLabel.setVisible(false);
                 amountField.setVisible(false);
                 break;
-            case ("Sales"):
+            case (1):
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -92,7 +88,7 @@ public class EditOps extends JFrame {
                 amountLabel.setVisible(true);
                 amountField.setVisible(true);
                 break;
-            case ("Transactions"):
+            case (2):
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -137,7 +133,7 @@ public class EditOps extends JFrame {
         nameField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getName());
         supplierField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getSupplier());
         stockField.setText(Integer.toString(inputArray0.get(recComboBox.getSelectedIndex()).getStock()));
-        if (menuType.equals("Inventory")) {
+        if (menuType == 0) {
             if (inputArray0.get(recComboBox.getSelectedIndex()).getLocation().equals("Shop")) {
                 locComboBox.setSelectedIndex(0);
             } else {
@@ -145,7 +141,7 @@ public class EditOps extends JFrame {
             }
         }
         priceField.setText(Double.toString(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
-        if (menuType.equals("Transactions")) {
+        if (menuType == 2) {
             if (inputArray0.get(recComboBox.getSelectedIndex()).getPaymentType().equals("Credit Card")) {
                 payComboBox.setSelectedIndex(0);
             } else {
@@ -154,7 +150,7 @@ public class EditOps extends JFrame {
         }
         // card field logic
         cardField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber());
-        if (menuType.equals("Sales")) {
+        if (menuType == 1) {
             if (!inputArray1.isEmpty()) {
                 amountField.setText(
                         Double.toString(
@@ -164,14 +160,14 @@ public class EditOps extends JFrame {
                 );
             }
         }
-        if (menuType.equals("Sales")) {
+        if (menuType == 1) {
             quantityField.setText(Integer.toString(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity()));
             amountField.setText(Double.toString(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
         } else {
             amountField.setText(Double.toString(inputArray0.get(recComboBox.getSelectedIndex()).getAmount()));
         }
         // Disable text field editing of inventory data for Sales menu
-        if (menuType.equals("Sales")) {
+        if (menuType == 1) {
             idField.setEditable(false);
             nameField.setEditable(false);
             supplierField.setEditable(false);
@@ -199,7 +195,7 @@ public class EditOps extends JFrame {
             nameField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getName());
             supplierField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getSupplier());
             stockField.setText(Integer.toString(inputArray0.get(recComboBox.getSelectedIndex()).getStock()));
-            if (menuType.equals("Inventory")) {
+            if (menuType == 0) {
                 if (inputArray0.get(recComboBox.getSelectedIndex()).getLocation().equals("Shop")) {
                     locComboBox.setSelectedIndex(0);
                 } else {
@@ -207,7 +203,7 @@ public class EditOps extends JFrame {
                 }
             }
             priceField.setText(Double.toString(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
-            if (menuType.equals("Transactions")) {
+            if (menuType == 2) {
                 if (inputArray0.get(recComboBox.getSelectedIndex()).getPaymentType().equals("Credit Card")) {
                     payComboBox.setSelectedIndex(0);
                 } else {
@@ -215,7 +211,7 @@ public class EditOps extends JFrame {
                 }
             }
             cardField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber());
-            if (menuType.equals("Sales")) {
+            if (menuType == 1) {
                 if (!inputArray1.isEmpty()) {
                     amountField.setText(
                             Double.toString(
@@ -225,14 +221,14 @@ public class EditOps extends JFrame {
                     );
                 }
             }
-            if (menuType.equals("Sales")) {
+            if (menuType == 1) {
                 quantityField.setText(Integer.toString(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity()));
                 amountField.setText(Double.toString(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
             } else {
                 amountField.setText(Double.toString(inputArray0.get(recComboBox.getSelectedIndex()).getAmount()));
             }
             // Disable text field editing of inventory data for Sales menu
-            if (menuType.equals("Sales")) {
+            if (menuType == 1) {
                 idField.setEditable(false);
                 nameField.setEditable(false);
                 supplierField.setEditable(false);
@@ -257,43 +253,33 @@ public class EditOps extends JFrame {
         });
 
         editButton.addActionListener(e -> {
-            try {
-                switch (menuType) {
-                    case "Inventory":
-                        Inventory.editData(
-                                recComboBox.getSelectedIndex(),
-                                idField.getText(),
-                                nameField.getText(),
-                                supplierField.getText(),
-                                Integer.parseInt(stockField.getText()),
-                                String.valueOf(locComboBox.getSelectedItem()),
-                                Double.parseDouble(priceField.getText())
-                        );
-                        break;
-                    case "Sales":
-                        Sales.editData(
-                                recComboBox.getSelectedIndex(),
-                                idField.getText(),
-                                nameField.getText(),
-                                supplierField.getText(),
-                                Double.parseDouble(priceField.getText()),
-                                Integer.parseInt(quantityField.getText()),
-                                Double.parseDouble(amountField.getText())
-                        );
-                        break;
-                    case "Transactions":
-                        Transactions.editData(
-                                recComboBox.getSelectedIndex(),
-                                idField.getText(),
-                                nameField.getText(),
-                                String.valueOf(payComboBox.getSelectedItem()),
-                                cardField.getText(),
-                                Double.parseDouble(amountField.getText())
-                        );
-                        break;
-                }
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
+            switch (menuType) {
+                case (0) -> Inventory.editData(
+                        recComboBox.getSelectedIndex(),
+                        idField.getText(),
+                        nameField.getText(),
+                        supplierField.getText(),
+                        Integer.parseInt(stockField.getText()),
+                        String.valueOf(locComboBox.getSelectedItem()),
+                        Double.parseDouble(priceField.getText())
+                );
+                case (1) -> Sales.editData(
+                        recComboBox.getSelectedIndex(),
+                        idField.getText(),
+                        nameField.getText(),
+                        supplierField.getText(),
+                        Double.parseDouble(priceField.getText()),
+                        Integer.parseInt(quantityField.getText()),
+                        Double.parseDouble(amountField.getText())
+                );
+                case (2) -> Transactions.editData(
+                        recComboBox.getSelectedIndex(),
+                        idField.getText(),
+                        nameField.getText(),
+                        String.valueOf(payComboBox.getSelectedItem()),
+                        cardField.getText(),
+                        Double.parseDouble(amountField.getText())
+                );
             }
             dispose();
         });
@@ -378,9 +364,7 @@ public class EditOps extends JFrame {
         });
     }
 
-    public static void launchUI(
-            String menuType, ArrayList<DataTypes> inputArray0, ArrayList<DataTypes> inputArray1
-    ) {
+    public static void launchUI(int menuType, ArrayList<DataTypes> inputArray0, ArrayList<DataTypes> inputArray1) {
         JFrame frame = new EditOps("Edit", menuType, inputArray0, inputArray1);
         frame.setVisible(true);
     }

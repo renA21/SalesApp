@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.security.Key;
+import java.text.DecimalFormat;
 
 public class AddOps extends JFrame {
     private JPanel mainPanel;
@@ -34,7 +34,7 @@ public class AddOps extends JFrame {
     private JLabel amountLabel;
     private JLabel addTitle;
 
-    public AddOps(String title, String menuType) {
+    public AddOps(String title, int menuType) {
 
         super(title);
         this.setContentPane(mainPanel);
@@ -42,9 +42,9 @@ public class AddOps extends JFrame {
         this.pack();
         this.setLocationRelativeTo(null);
 
-        // set visibility of components based on the menu
+        // Set visibility of components based on the type of menu it was called from.
         switch (menuType) {
-            case ("Inventory"):
+            case (0) -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -65,8 +65,8 @@ public class AddOps extends JFrame {
                 cardField.setVisible(false);
                 amountLabel.setVisible(false);
                 amountField.setVisible(false);
-                break;
-            case ("Sales"):
+            }
+            case (1) -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -88,8 +88,8 @@ public class AddOps extends JFrame {
                 amountLabel.setText("Amount Earned:");
                 amountLabel.setVisible(true);
                 amountField.setVisible(true);
-                break;
-            case ("Transactions"):
+            }
+            case (2) -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -110,7 +110,7 @@ public class AddOps extends JFrame {
                 cardField.setVisible(true);
                 amountLabel.setVisible(true);
                 amountField.setVisible(true);
-                break;
+            }
         }
 
         // Add location and payment type combo box options
@@ -122,42 +122,24 @@ public class AddOps extends JFrame {
         // Panel Title
         addTitle.setText("New record in " + menuType);
 
+        // Get all values present in all text fields and combo boxes
         addButton.addActionListener(e -> {
-            try {
-                switch (menuType) {
-                    case "Inventory":
-                        Inventory.addData(
-                                idField.getText(),
-                                nameField.getText(),
-                                supplierField.getText(),
-                                Integer.parseInt(stockField.getText()),
-                                String.valueOf(locComboBox.getSelectedItem()),
-                                Double.parseDouble(priceField.getText())
-                        );
-                        break;
-                    // might not be needed
-                    /*case "Sales":
-                        Sales.addData(
-                                idField.getText(),
-                                nameField.getText(),
-                                supplierField.getText(),
-                                Double.parseDouble(priceField.getText()),
-                                Integer.parseInt(quantityField.getText()),
-                                Double.parseDouble(amountField.getText())
-                        );
-                        break;*/
-                    case "Transactions":
-                        Transactions.addData(
-                                idField.getText(),
-                                nameField.getText(),
-                                String.valueOf(payComboBox.getSelectedItem()),
-                                cardField.getText(),
-                                Double.parseDouble(amountField.getText())
-                        );
-                        break;
-                }
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
+            switch (menuType) {
+                case (0) -> Inventory.addData(
+                        idField.getText(),
+                        nameField.getText(),
+                        supplierField.getText(),
+                        Integer.parseInt(stockField.getText()),
+                        String.valueOf(locComboBox.getSelectedItem()),
+                        Double.parseDouble(priceField.getText())
+                );
+                case (1) -> Transactions.addData(
+                        idField.getText(),
+                        nameField.getText(),
+                        String.valueOf(payComboBox.getSelectedItem()),
+                        cardField.getText(),
+                        Double.parseDouble(amountField.getText())
+                );
             }
             dispose();
         });
@@ -179,7 +161,10 @@ public class AddOps extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 priceField.setEditable(
-                        e.getKeyChar() >= '0' && e.getKeyChar() <= '9' || e.getKeyChar() == '.' || e.getKeyCode() == KeyEvent.VK_BACK_SPACE
+                        e.getKeyChar() >= '0' &&
+                        e.getKeyChar() <= '9' ||
+                        e.getKeyChar() == '.' ||
+                        e.getKeyCode() == KeyEvent.VK_BACK_SPACE
                 );
             }
         });
@@ -188,9 +173,10 @@ public class AddOps extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 quantityField.setEditable(
-                        e.getKeyChar() >= '0' && e.getKeyChar() <= '9' ||
-                                e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
-                                e.getKeyCode() == KeyEvent.VK_ENTER
+                        e.getKeyChar() >= '0' &&
+                        e.getKeyChar() <= '9' ||
+                        e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
+                        e.getKeyCode() == KeyEvent.VK_ENTER
                 );
             }
         });
@@ -199,9 +185,10 @@ public class AddOps extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 cardField.setEditable(
-                        e.getKeyChar() >= '0' && e.getKeyChar() <= '9' ||
-                                e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
-                                e.getKeyCode() == KeyEvent.VK_ENTER
+                        e.getKeyChar() >= '0' &&
+                        e.getKeyChar() <= '9' ||
+                        e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
+                        e.getKeyCode() == KeyEvent.VK_ENTER
                 );
             }
         });
@@ -210,10 +197,11 @@ public class AddOps extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 amountField.setEditable(
-                        e.getKeyChar() >= '0' && e.getKeyChar() <= '9' ||
-                                e.getKeyChar() == '.' ||
-                                e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
-                                e.getKeyCode() == KeyEvent.VK_ENTER
+                        e.getKeyChar() >= '0' &&
+                        e.getKeyChar() <= '9' ||
+                        e.getKeyChar() == '.' ||
+                        e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
+                        e.getKeyCode() == KeyEvent.VK_ENTER
                 );
             }
         });
@@ -229,7 +217,7 @@ public class AddOps extends JFrame {
         });
     }
 
-    public static void launchUI(String menuType) {
+    public static void launchUI(int menuType) {
         JFrame frame = new AddOps("Add", menuType);
         frame.setVisible(true);
     }

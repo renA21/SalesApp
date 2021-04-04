@@ -22,6 +22,12 @@ public class Transactions extends JFrame {
     private static String fileDate;
     private static int prevDayCount = 0;
     private static int nextDayCount = 0;
+    /**
+     * menuType = 0 -> Inventory
+     * menuType = 1 -> Sales
+     * menuType = 2 -> Transactions
+     */
+    private static final int menuType = 2;
 
     private JButton menuButton;
     private JButton addButton;
@@ -120,7 +126,7 @@ public class Transactions extends JFrame {
 
         addButton.addActionListener(e -> {
             System.out.println("INFO: Opened AddOps.");
-            AddOps.launchUI("Transactions");
+            AddOps.launchUI(menuType);
         });
 
         editButton.addActionListener(e -> {
@@ -134,7 +140,7 @@ public class Transactions extends JFrame {
                 );
             } else {
                 System.out.println("INFO: Opened EditOps.");
-                EditOps.launchUI("Transactions", transactionsArray, null);
+                EditOps.launchUI(menuType, transactionsArray, null);
             }
         });
 
@@ -149,7 +155,7 @@ public class Transactions extends JFrame {
                 );
             } else {
                 System.out.println("INFO: Opened DeleteOps.");
-                DeleteOps.launchUI("Transactions", transactionsArray, null);
+                DeleteOps.launchUI(menuType, transactionsArray, null);
             }
         });
 
@@ -235,11 +241,6 @@ public class Transactions extends JFrame {
             row[5] = transactionsArray.get(i).getAmount();
             tableData.addRow(row);
         }
-
-        // just for reference
-        /* for (int i = 0; i < invArray.size(); i++) {
-            System.out.println(invArray.get(i).getID());
-        } */
     }
 
     private static void transactions() throws IOException {
@@ -300,7 +301,7 @@ public class Transactions extends JFrame {
             String paymentType,
             String cardNumber,
             double amount
-    ) throws IOException {
+    ) {
         transactionsArray.add(data = new DataTypes());
         data.setID(id);
         data.setName(name);
@@ -320,7 +321,7 @@ public class Transactions extends JFrame {
             String paymentType,
             String cardNumber,
             double amount
-    ) throws IOException {
+    ) {
         transactionsArray.set(index, data = new DataTypes());
         data.setID(id);
         data.setName(name);

@@ -32,11 +32,7 @@ public class DeleteOps extends JFrame {
     private JPanel mainPanel;
     private JLabel deleteLabel;
 
-    public DeleteOps(String title,
-                     String menuType,
-                     ArrayList<DataTypes> inputArray0,
-                     ArrayList<DataTypes> inputArray1)
-    {
+    public DeleteOps(String title, int menuType, ArrayList<DataTypes> inputArray0, ArrayList<DataTypes> inputArray1) {
         super(title);
         this.setContentPane(mainPanel);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -45,7 +41,7 @@ public class DeleteOps extends JFrame {
 
         // set visibility of components based on the menu
         switch (menuType) {
-            case ("Inventory"):
+            case (0):
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -67,7 +63,7 @@ public class DeleteOps extends JFrame {
                 amountLabel.setVisible(false);
                 amountField.setVisible(false);
                 break;
-            case ("Sales"):
+            case (1):
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -90,7 +86,7 @@ public class DeleteOps extends JFrame {
                 amountLabel.setVisible(true);
                 amountField.setVisible(true);
                 break;
-            case ("Transactions"):
+            case (2):
                 idLabel.setVisible(true);
                 idField.setVisible(true);
                 nameLabel.setVisible(true);
@@ -117,11 +113,13 @@ public class DeleteOps extends JFrame {
         }
 
         // Panel Title/Records are not deleted in Sales, rather, cleared.
-        if (menuType.equals("Sales")) {
-            deleteTitle.setText("Clear record in " + menuType);
+        if (menuType == 0) {
+            deleteTitle.setText("Delete record in Inventory");
+        } else if (menuType == 1) {
+            deleteTitle.setText("Clear record in Sales");
             deleteLabel.setText("Please choose the Record # you wish to clear:");
-        } else {
-            deleteTitle.setText("Delete record in " + menuType);
+        } else if (menuType == 2) {
+            deleteTitle.setText("Delete record in Transactions");
         }
 
         // List number of records present in the table
@@ -130,7 +128,7 @@ public class DeleteOps extends JFrame {
         }
 
         // Disable clearing when quantity is zero.
-        if (menuType.equals("Sales")) {
+        if (menuType == 1) {
             if (inputArray1.get(recComboBox.getSelectedIndex()).getQuantity() == 0) {
                 JFrame warning = new JFrame();
                 JOptionPane.showMessageDialog(
@@ -141,7 +139,6 @@ public class DeleteOps extends JFrame {
                 );
                 deleteButton.setEnabled(false);
             }
-
         }
 
         // Fill the text fields/combo boxes corresponding to the selected record #.
@@ -153,7 +150,7 @@ public class DeleteOps extends JFrame {
         priceField.setText(Double.toString(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
         payTypeField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getPaymentType());
         cardField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber());
-        if (menuType.equals("Sales")) {
+        if (menuType == 1) {
             quantityField.setText(Integer.toString(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity()));
             amountField.setText(Double.toString(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
         } else {
@@ -161,7 +158,7 @@ public class DeleteOps extends JFrame {
         }
 
         recComboBox.addActionListener(e -> {
-            if (menuType.equals("Sales")) {
+            if (menuType == 1) {
                 if (inputArray1.get(recComboBox.getSelectedIndex()).getQuantity() == 0) {
                     JFrame warning = new JFrame();
                     JOptionPane.showMessageDialog(
@@ -181,7 +178,7 @@ public class DeleteOps extends JFrame {
             priceField.setText(Double.toString(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
             payTypeField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getPaymentType());
             cardField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber());
-            if (menuType.equals("Sales")) {
+            if (menuType == 1) {
                 quantityField.setText(Integer.toString(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity()));
                 amountField.setText(Double.toString(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
             } else {
@@ -189,21 +186,15 @@ public class DeleteOps extends JFrame {
             }
         });
 
-        if (menuType.equals("Sales")) {
+        if (menuType == 1) {
             deleteButton.setText("Clear");
         }
 
         deleteButton.addActionListener(e -> {
             switch (menuType) {
-                case "Inventory":
-                    Inventory.deleteData(recComboBox.getSelectedIndex());
-                    break;
-                case "Sales":
-                    Sales.deleteData(recComboBox.getSelectedIndex());
-                    break;
-                case "Transactions":
-                    Transactions.deleteData(recComboBox.getSelectedIndex());
-                    break;
+                case (0) -> Inventory.deleteData(recComboBox.getSelectedIndex());
+                case (1) -> Sales.deleteData(recComboBox.getSelectedIndex());
+                case (2) -> Transactions.deleteData(recComboBox.getSelectedIndex());
             }
             dispose();
         });
@@ -211,7 +202,7 @@ public class DeleteOps extends JFrame {
         cancelButton.addActionListener(e -> dispose());
     }
 
-    public static void launchUI(String menuType, ArrayList<DataTypes> inputArray0, ArrayList<DataTypes> inputArray1) {
+    public static void launchUI(int menuType, ArrayList<DataTypes> inputArray0, ArrayList<DataTypes> inputArray1) {
         JFrame frame = new DeleteOps("Delete", menuType, inputArray0, inputArray1);
         frame.setVisible(true);
     }

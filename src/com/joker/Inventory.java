@@ -15,6 +15,12 @@ public class Inventory extends JFrame {
     private static boolean saved = true; // flag that determines whether changes have been made to the table
     private static final DefaultTableModel tableData = new DefaultTableModel();
     private static final Object[] row = new Object[7];
+    /**
+     * menuType = 0 -> Inventory
+     * menuType = 1 -> Sales
+     * menuType = 2 -> Transactions
+     */
+    private static final int menuType = 0;
 
     private JPanel mainPanel;
     private JTable invTable;
@@ -104,7 +110,7 @@ public class Inventory extends JFrame {
 
         addButton.addActionListener(e -> {
             System.out.println("INFO: Opened AddOps.");
-            AddOps.launchUI("Inventory");
+            AddOps.launchUI(menuType);
         });
 
         editButton.addActionListener(e -> {
@@ -118,7 +124,7 @@ public class Inventory extends JFrame {
                 );
             } else {
                 System.out.println("INFO: Opened EditOps.");
-                EditOps.launchUI("Inventory", invArray, null);
+                EditOps.launchUI(menuType, invArray, null);
             }
         });
 
@@ -133,7 +139,7 @@ public class Inventory extends JFrame {
                 );
             } else {
                 System.out.println("INFO: Opened DeleteOps.");
-                DeleteOps.launchUI("Inventory", invArray, null);
+                DeleteOps.launchUI(menuType, invArray, null);
             }
         });
 
@@ -158,11 +164,6 @@ public class Inventory extends JFrame {
             row[6] = invArray.get(i).getPrice();
             tableData.addRow(row);
         }
-
-        // just for reference
-        /* for (int i = 0; i < invArray.size(); i++) {
-            System.out.println(invArray.get(i).getID());
-        } */
     }
 
     private static void inventory() throws IOException {
@@ -226,7 +227,7 @@ public class Inventory extends JFrame {
             int stock,
             String location,
             double price
-    ) throws IOException {
+    ) {
         invArray.add(data = new DataTypes());
         data.setID(id);
         data.setName(name);
@@ -248,7 +249,7 @@ public class Inventory extends JFrame {
             int stock,
             String location,
             double price
-    ) throws IOException {
+    ) {
         invArray.set(index, data = new DataTypes());
         data.setID(id);
         data.setName(name);

@@ -24,6 +24,12 @@ public class Sales extends JFrame {
     private static String fileDate;
     private static int prevDayCount = 0;
     private static int nextDayCount = 0;
+    /**
+     * menuType = 0 -> Inventory
+     * menuType = 1 -> Sales
+     * menuType = 2 -> Transactions
+     */
+    private static final int menuType = 1;
 
     private JPanel mainPanel;
     private JButton menuButton;
@@ -133,7 +139,7 @@ public class Sales extends JFrame {
                 );
             } else {
                 System.out.println("INFO: Opened EditOps.");
-                EditOps.launchUI("Sales", invArray, salesArray);
+                EditOps.launchUI(menuType, invArray, salesArray);
             }
         });
 
@@ -148,7 +154,7 @@ public class Sales extends JFrame {
                 );
             } else {
                 System.out.println("INFO: Opened DeleteOps.");
-                DeleteOps.launchUI("Sales", invArray, salesArray);
+                DeleteOps.launchUI(menuType, invArray, salesArray);
             }
         });
 
@@ -241,11 +247,6 @@ public class Sales extends JFrame {
             row[6] = salesArray.get(i).getAmount();
             tableData.addRow(row);
         }
-
-        // just for reference
-        /* for (int i = 0; i < invArray.size(); i++) {
-            System.out.println(invArray.get(i).getID());
-        } */
     }
 
     private static void sales() throws IOException {
@@ -343,7 +344,7 @@ public class Sales extends JFrame {
             double price,
             int quantity,
             double amount
-    ) throws IOException {
+    ) {
         try {
             salesArray.set(index, data = new DataTypes());
         } catch (IndexOutOfBoundsException e) {
