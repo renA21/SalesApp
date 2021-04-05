@@ -5,6 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
+/**
+ * Main class: creates required directories, log flag and defining the version of the program.
+ */
 public class Main {
 
     // Program version
@@ -15,16 +18,24 @@ public class Main {
     public static final File salesDir = new File("salesAppData/sales/");
     public static final File transactionsDir = new File("salesAppData/transactions/");
 
-    // Debug: Toggle logging
+    // Debug: Flag to enable/disable logging
     private static final boolean logging = false;
 
     // Print console output to log file
     private static PrintStream out;
 
+    /**
+     *  Print program title and version to the console
+     */
     public static void programInfo() {
         System.out.println("SalesApp Version: " + version);
     }
 
+    /**
+     * Main method, the starting point of the program
+     * Creates directories to store the database files
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         if (logging) {
             try {

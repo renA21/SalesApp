@@ -5,6 +5,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 
+/**
+ * AddOps GUI
+ * Separate small window handling the creation of new data for a table.
+ */
 public class AddOps extends JFrame {
     // Decimal formatting for currency
     private final DecimalFormat df = new DecimalFormat("#0.00");
@@ -34,6 +38,11 @@ public class AddOps extends JFrame {
     private JLabel amountLabel;
     private JLabel addTitle;
 
+    /**
+     * Creates the GUI and its declared Swing components.
+     * @param title set window title.
+     * @param menuType the type of menu where DeleteOps was instantiated from.
+     */
     public AddOps(String title, int menuType) {
 
         super(title);
@@ -215,6 +224,7 @@ public class AddOps extends JFrame {
             }
         });
 
+        // Disable text field if selected as Cash and set N/A as its default value
         payComboBox.addActionListener(e -> {
             if (payComboBox.getSelectedIndex() == 1) {
                 cardField.setText("N/A");
@@ -226,6 +236,10 @@ public class AddOps extends JFrame {
         });
     }
 
+    /**
+     * Initializes the AddOps GUI
+     * @param menuType input menu type
+     */
     public static void launchUI(int menuType) {
         JFrame frame = new AddOps("Add", menuType);
         frame.setVisible(true);

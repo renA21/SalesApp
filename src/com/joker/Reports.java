@@ -10,6 +10,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Reports GUI
+ */
 public class Reports extends JFrame {
     private static final DecimalFormat currencyFormat = new DecimalFormat("#0.00"); // Currency format
     private static final DecimalFormat dayFormat = new DecimalFormat("00");
@@ -21,7 +24,6 @@ public class Reports extends JFrame {
     private static final ArrayList<DataTypes> salesArray = new ArrayList<>();
     private static final ArrayList<DataTypes> inputSalesArray = new ArrayList<>();
     private static final ArrayList<DataTypes> transactionsArray = new ArrayList<>();
-    private static final boolean saved = true; // Flag that determines whether changes have been made to the table
     private static final DefaultTableModel tableData0 = new DefaultTableModel();
     private static final DefaultTableModel tableData1 = new DefaultTableModel();
     private static final Object[] salesRow = new Object[7];
@@ -55,6 +57,10 @@ public class Reports extends JFrame {
     private JLabel totalPriceLabel;
     private JLabel totalRevenueLabel;
 
+    /**
+     * Creates the GUI and its declared Swing components.
+     * @param title set window title.
+     */
     public Reports(String title) {
         super(title);
         this.setContentPane(mainPanel);
@@ -62,9 +68,8 @@ public class Reports extends JFrame {
         this.pack();
         this.setLocationRelativeTo(null);
 
-        JFrame confirmExit = new JFrame();
-
         // Exit confirmation when closing the window
+        JFrame confirmExit = new JFrame();
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -78,6 +83,7 @@ public class Reports extends JFrame {
             }
         });
 
+        // Show current time and date
         new Timer(0, (ActionEvent e) -> {
             Date d = new Date();
             SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss a dd/MM/yyyy");
@@ -87,11 +93,11 @@ public class Reports extends JFrame {
         // Show current table date
         tableDateLabel.setText("Date: " + fileDate);
 
-        // Clear columns of JTable beforehand
+        // Clear column headers of both JTables beforehand
         tableData0.setColumnCount(0);
         tableData1.setColumnCount(0);
 
-        // JTable columns for Sales
+        // JTable column headers for Sales
         tableData0.addColumn("Record #");
         tableData0.addColumn("ID");
         tableData0.addColumn("Name");
@@ -100,10 +106,11 @@ public class Reports extends JFrame {
         tableData0.addColumn("Quantity");
         tableData0.addColumn("Amount Earned");
 
+        // Set column headers
         salesTable.setModel(tableData0);
         salesScrollPane.setViewportView(salesTable);
 
-        // JTable columns for Transactions
+        // JTable column headers for Transactions
         tableData1.addColumn("Record #");
         tableData1.addColumn("ID");
         tableData1.addColumn("Client Name");
@@ -111,37 +118,35 @@ public class Reports extends JFrame {
         tableData1.addColumn("Credit Card Number");
         tableData1.addColumn("Amount");
 
+        // Set column headers
         transactionsTable.setModel(tableData1);
         transactionsScrollPane.setViewportView(transactionsTable);
 
-        // Clear contents of JTable beforehand
+        // Clear contents of JTables beforehand
         tableData0.setRowCount(0);
         tableData1.setRowCount(0);
+
         fetchTableData();
 
-        // Labels
+        // Total labels
         totalQuantityLabel.setText("Total quantity sold: " + totalQuantity);
         totalPriceLabel.setText("Total items price: " + totalPrice);
         totalRevenueLabel.setText("Total revenue: " + totalRevenue);
 
         menuButton.addActionListener(e -> {
-            try {
-                System.out.println("INFO: Entered Main Menu.");
-                MainMenu.launchUI();
-                // Clear all arrays
-                invFile.getBuffer().clear();
-                invArray.clear();
-                salesFile.getBuffer().clear();
-                salesArray.clear();
-                transactionsFile.getBuffer().clear();
-                transactionsArray.clear();
-                totalQuantity = 0;
-                totalPrice = 0;
-                totalRevenue = 0;
-                dispose();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
+            System.out.println("INFO: Entered Main Menu.");
+            MainMenu.launchUI();
+            // Clear all arrays
+            invFile.getBuffer().clear();
+            invArray.clear();
+            salesFile.getBuffer().clear();
+            salesArray.clear();
+            transactionsFile.getBuffer().clear();
+            transactionsArray.clear();
+            totalQuantity = 0;
+            totalPrice = 0;
+            totalRevenue = 0;
+            dispose();
         });
 
         todayButton.addActionListener(e -> {
@@ -290,7 +295,11 @@ public class Reports extends JFrame {
         });
     }
 
+    /**
+     * Parses data into the table from invArray, salesArray and transactionsArray.
+     */
     private static void fetchTableData() {
+        // Parse Sales table
         for (int i = 0; i < invArray.size(); i++) {
             salesRow[0] = i;
             salesRow[1] = invArray.get(i).getID();
@@ -302,6 +311,7 @@ public class Reports extends JFrame {
             tableData0.addRow(salesRow);
         }
 
+        // Parse Transactions table
         for (int i = 0; i < transactionsArray.size(); i++) {
             transactionsRow[0] = i;
             transactionsRow[1] = transactionsArray.get(i).getID();
@@ -313,6 +323,10 @@ public class Reports extends JFrame {
         }
     }
 
+    /**
+     * Handles the input of both the Sales and Transactions tables altogether.
+     * @throws IOException IO error handling
+     */
     private static void reports() throws IOException {
         invFile.setFile(Main.dataDir,"inventory.csv");
 
@@ -329,8 +343,6 @@ public class Reports extends JFrame {
         if (!invFile.getBuffer().isEmpty() && invFile.getBuffer().get(0).get(0).equals("ID")) {
             invFile.getBuffer().remove(0);
         }
-
-        System.out.println(invFile.getBuffer().get(0).get(5));
 
         for (int i = 0; i < invFile.getBuffer().size(); i++) {
             data = new DataTypes();
@@ -378,8 +390,10 @@ public class Reports extends JFrame {
         }
     }
 
+    /**
+     * Sales table data handling from reports method
+     */
     private static void sales() {
-        // Sales data handling
         // Remove first row if column headers exist.
         if (!salesFile.getBuffer().isEmpty() && salesFile.getBuffer().get(0).get(4).equals("Quantity")) {
             salesFile.getBuffer().remove(0);
@@ -404,6 +418,9 @@ public class Reports extends JFrame {
         inputSalesArray.clear();
     }
 
+    /**
+     * Calculates and sets the total quantity and price
+     */
     private static void total() {
         for (DataTypes dataTypes : salesArray) {
             totalQuantity += dataTypes.getQuantity();
@@ -412,11 +429,13 @@ public class Reports extends JFrame {
 
     }
 
+    /**
+     * Transactions table data handling from reports method
+     */
     private static void transactions() {
         if (!transactionsFile.existence) {
             totalRevenue = totalRevenue + 0;
         } else {
-            // Transactions data handling
             // Remove first row if column headers exist
             if (!transactionsFile.getBuffer().isEmpty() && transactionsFile.getBuffer().get(0).get(0).equals("ID")) {
                 transactionsFile.getBuffer().remove(0);
@@ -439,13 +458,20 @@ public class Reports extends JFrame {
         }
     }
 
+    /**
+     * Prints a CLI version of the Sales table to the console/log for debugging purposes.
+     */
     private static void printSalesTable() {
         // Table headers
-        System.out.println("--------------------------------------------------------------------------------------------");
+        System.out.println(
+                "--------------------------------------------------------------------------------------------"
+        );
         System.out.printf("| %10s | %10s | %10s | %10s | %10s | %10s | %10s |\n",
                 "Record #", "ID", "Name", "Supplier", "Price", "Quantity", "Amount"
         );
-        System.out.println("--------------------------------------------------------------------------------------------");
+        System.out.println(
+                "--------------------------------------------------------------------------------------------"
+        );
 
         if (salesFile.getBuffer().isEmpty() && salesArray.isEmpty()) {
             System.out.println("WARNING: File not found or Sales database is empty. " +
@@ -473,9 +499,14 @@ public class Reports extends JFrame {
                 );
             }
         }
-        System.out.println("--------------------------------------------------------------------------------------------");
+        System.out.println(
+                "--------------------------------------------------------------------------------------------"
+        );
     }
 
+    /**
+     * Prints a CLI version of the Transactions table to the console/log for debugging purposes.
+     */
     private static void printTransactionsTable() {
         // Table headers
         System.out.println("--------------------------------------------------------------------------------");
@@ -511,6 +542,11 @@ public class Reports extends JFrame {
         System.out.println("--------------------------------------------------------------------------------");
     }
 
+    /**
+     * Initializes the Reports GUI and its core methods.
+     * Reset dates.
+     * @throws IOException IO error handling
+     */
     public static void launchUI() throws IOException {
         System.out.println("=====REPORTS MENU=====");
         // Default to today's time

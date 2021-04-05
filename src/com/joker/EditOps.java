@@ -6,8 +6,13 @@ import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+/**
+ * EditOps GUI
+ * Separate small window that handles the editing of data in a table.
+ */
 public class EditOps extends JFrame {
-    private final DecimalFormat df = new DecimalFormat("#0.00"); // Decimal formatting for currency
+    // Decimal formatting for currency
+    private final DecimalFormat df = new DecimalFormat("#0.00");
 
     private JLabel editTitle;
     private JLabel quantityLabel;
@@ -33,9 +38,15 @@ public class EditOps extends JFrame {
     private JButton cancelButton;
     private JPanel mainPanel;
     private JTextField idField;
-    private JLabel recordLabel;
     private JComboBox recComboBox;
 
+    /**
+     * Creates the GUI and its declared Swing components.
+     * @param title set window title.
+     * @param menuType the type of menu where DeleteOps was instantiated from.
+     * @param inputArray0 first ArrayList input.
+     * @param inputArray1 second Arraylist input, set to null when working with only one arraylist.
+     */
     public EditOps(String title, int menuType, ArrayList<DataTypes> inputArray0, ArrayList<DataTypes> inputArray1) {
         super(title);
         this.setContentPane(mainPanel);
@@ -43,7 +54,7 @@ public class EditOps extends JFrame {
         this.pack();
         this.setLocationRelativeTo(null);
 
-        // set visibility of components based on the menu
+        // Set visibility of components based on the menu
         switch (menuType) {
             case 0 -> {
                 idLabel.setVisible(true);
@@ -152,7 +163,7 @@ public class EditOps extends JFrame {
                 payComboBox.setSelectedIndex(1);
             }
         }
-        // card field logic
+        // Enable card number field if Credit Card is selected from the combo box.
         cardField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber());
         if (menuType == 1) {
             if (!inputArray1.isEmpty()) {
@@ -210,6 +221,7 @@ public class EditOps extends JFrame {
                     payComboBox.setSelectedIndex(1);
                 }
             }
+            // Enable card number field if Credit Card is selected from the combo box.
             cardField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber());
             if (menuType == 1) {
                 if (!inputArray1.isEmpty()) {
@@ -310,7 +322,8 @@ public class EditOps extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 quantityField.setEditable(
-                        e.getKeyChar() >= '0' && e.getKeyChar() <= '9' ||
+                        e.getKeyChar() >= '0' &&
+                        e.getKeyChar() <= '9' ||
                         e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
                         e.getKeyCode() == KeyEvent.VK_ENTER
                 );
@@ -321,7 +334,8 @@ public class EditOps extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 cardField.setEditable(
-                        e.getKeyChar() >= '0' && e.getKeyChar() <= '9' ||
+                        e.getKeyChar() >= '0' &&
+                        e.getKeyChar() <= '9' ||
                         e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
                         e.getKeyCode() == KeyEvent.VK_ENTER
                 );
@@ -332,7 +346,8 @@ public class EditOps extends JFrame {
             @Override
             public void keyPressed(KeyEvent e) {
                 amountField.setEditable(
-                        e.getKeyChar() >= '0' &&e.getKeyChar() <= '9' ||
+                        e.getKeyChar() >= '0' &&
+                        e.getKeyChar() <= '9' ||
                         e.getKeyChar() == '.' ||
                         e.getKeyCode() == KeyEvent.VK_BACK_SPACE ||
                         e.getKeyCode() == KeyEvent.VK_ENTER
@@ -362,6 +377,12 @@ public class EditOps extends JFrame {
         });
     }
 
+    /**
+     * Initializes the EditOps GUI
+     * @param menuType input menu type
+     * @param inputArray0 input first ArrayList
+     * @param inputArray1 input second ArrayList
+     */
     public static void launchUI(int menuType, ArrayList<DataTypes> inputArray0, ArrayList<DataTypes> inputArray1) {
         JFrame frame = new EditOps("Edit", menuType, inputArray0, inputArray1);
         frame.setVisible(true);

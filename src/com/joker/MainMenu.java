@@ -2,10 +2,14 @@ package com.joker;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Main Menu GUI
+ */
 public class MainMenu extends JFrame {
     private JButton inventoryButton;
     private JButton transactionsButton;
@@ -14,6 +18,10 @@ public class MainMenu extends JFrame {
     private JPanel mainMenuPanel;
     private JLabel dateLabel;
 
+    /**
+     * Creates the GUI and its declared Swing components
+     * @param title set window title
+     */
     public MainMenu(String title) {
         super(title);
         this.setContentPane(mainMenuPanel);
@@ -21,9 +29,8 @@ public class MainMenu extends JFrame {
         this.pack();
         this.setLocationRelativeTo(null);
 
-        JFrame confirmExit = new JFrame();
-
         // Exit confirmation when closing the window
+        JFrame confirmExit = new JFrame();
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -37,12 +44,13 @@ public class MainMenu extends JFrame {
             }
         });
 
+        // Show current time and date
         new Timer(0, (ActionEvent e) -> {
             Date d = new Date();
             SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss a yyyy-MM-dd");
             dateLabel.setText(formatTime.format(d));
         }).start();
-
+        
         inventoryButton.addActionListener(e -> {
             try {
                 System.out.println("INFO: Entered Inventory Menu.");
@@ -84,7 +92,10 @@ public class MainMenu extends JFrame {
         });
     }
 
-    public static void launchUI() throws IOException {
+    /**
+     * Initializes the MainMenu GUI
+     */
+    public static void launchUI() {
         System.out.println("=====MAIN MENU=====");
         JFrame frame = new MainMenu("SalesApp " + Main.version + " | Main Menu");
         frame.setVisible(true);

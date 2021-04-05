@@ -12,24 +12,22 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * Transactions GUI
+ */
 public class Transactions extends JFrame {
     private static final DecimalFormat df = new DecimalFormat("#0.00"); // Decimal formatting for currency
-    private static final FileOps transactionsFile = new FileOps(); // FileOps object
+    private static final FileOps transactionsFile = new FileOps();
     private static DataTypes data;
     private static final ArrayList<DataTypes> transactionsArray = new ArrayList<>();
-    private static boolean saved = true; // flag that determines whether changes have been made to the table
+    private static boolean saved = true; // Flag that determines whether changes have been made to the table
     private static final DefaultTableModel tableData = new DefaultTableModel();
     private static final Object[] row = new Object[6];
     private static LocalDate currentDate;
     private static String fileDate;
     private static int prevDayCount = 0;
     private static int nextDayCount = 0;
-    /**
-     * menuType = 0 -> Inventory
-     * menuType = 1 -> Sales
-     * menuType = 2 -> Transactions
-     */
-    private static final int menuType = 2;
+    private static final int menuType = 2; // 0 = Inventory, 1 = Sales, 2 = Transactions
 
     private JButton menuButton;
     private JButton addButton;
@@ -46,6 +44,10 @@ public class Transactions extends JFrame {
     private JLabel tableDateLabel;
     private JButton todayButton;
 
+    /**
+     * Creates the GUI and its declared Swing components.
+     * @param title set window title.
+     */
     public Transactions(String title) {
         super(title);
         this.setContentPane(mainPanel);
@@ -53,9 +55,8 @@ public class Transactions extends JFrame {
         this.pack();
         this.setLocationRelativeTo(null);
 
-        JFrame confirmExit = new JFrame();
-
         // Exit confirmation when closing the window
+        JFrame confirmExit = new JFrame();
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -69,6 +70,7 @@ public class Transactions extends JFrame {
             }
         });
 
+        // Show current time and date
         new Timer(0, (ActionEvent e) -> {
             Date d = new Date();
             SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss a yyyy-MM-dd");
@@ -79,10 +81,10 @@ public class Transactions extends JFrame {
         tableDateLabel.setText("Date: " + fileDate);
         readFile.setText("File: transactions_" + fileDate + ".csv");
 
-        // Clear columns of JTable beforehand
+        // Clear column headers of JTable beforehand
         tableData.setColumnCount(0);
 
-        // JTable columns
+        // JTable column headers
         tableData.addColumn("Record #");
         tableData.addColumn("ID");
         tableData.addColumn("Client Name");
@@ -90,39 +92,35 @@ public class Transactions extends JFrame {
         tableData.addColumn("Credit Card Number");
         tableData.addColumn("Amount");
 
-        // Clear contents of JTable beforehand
-        tableData.setRowCount(0);
+        tableData.setRowCount(0); // Clear contents of JTable beforehand
         fetchTableData();
 
+        // Set column headers
         transactionsTable.setModel(tableData);
         transactionsScrollPane.setViewportView(transactionsTable);
 
         menuButton.addActionListener(e -> {
-            try {
-                if (saved) {
+            if (saved) {
+                System.out.println("INFO: Entered Main Menu.");
+                // Clear all arrays
+                transactionsFile.getBuffer().clear();
+                transactionsArray.clear();
+                MainMenu.launchUI();
+                dispose();
+            } else {
+                int option = JOptionPane.showConfirmDialog(confirmExit,
+                        "Changes were made to the database. Any unsaved data will be lost. Do you want to continue?",
+                        "Unsaved Changes", JOptionPane.YES_NO_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    System.out.println("WARNING: Changes in the table were not saved.");
                     System.out.println("INFO: Entered Main Menu.");
                     // Clear all arrays
                     transactionsFile.getBuffer().clear();
                     transactionsArray.clear();
+                    saved = true;
                     MainMenu.launchUI();
                     dispose();
-                } else {
-                    int option = JOptionPane.showConfirmDialog(confirmExit,
-                            "Changes were made to the database. Any unsaved data will be lost. Do you want to continue?",
-                            "Unsaved Changes", JOptionPane.YES_NO_OPTION);
-                    if (option == JOptionPane.YES_OPTION) {
-                        System.out.println("WARNING: Changes in the table were not saved.");
-                        System.out.println("INFO: Entered Main Menu.");
-                        // Clear all arrays
-                        transactionsFile.getBuffer().clear();
-                        transactionsArray.clear();
-                        saved = true;
-                        MainMenu.launchUI();
-                        dispose();
-                    }
                 }
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
             }
         });
 
@@ -170,6 +168,7 @@ public class Transactions extends JFrame {
             }
         });
 
+        // Reset and jump to the data of today
         todayButton.addActionListener(e -> {
             nextDayCount = 0;
             prevDayCount = 0;
@@ -188,7 +187,9 @@ public class Transactions extends JFrame {
             }
         });
 
+        // Change to read data from the previous day
         previousButton.addActionListener(e -> {
+            // Reverse nextDayCount if != 0
             if (nextDayCount != 0) {
                 nextDayCount--;
                 fileDate = String.valueOf(currentDate.plusDays(nextDayCount));
@@ -210,7 +211,9 @@ public class Transactions extends JFrame {
             }
         });
 
+        // Change to read data from the next day
         nextButton.addActionListener(e -> {
+            // Reverse prevDayCount if != 0
             if (prevDayCount != 0) {
                 prevDayCount--;
                 fileDate = String.valueOf(currentDate.minusDays(prevDayCount));
@@ -233,6 +236,9 @@ public class Transactions extends JFrame {
         });
     }
 
+    /**
+     * Parses data into the table from transactionsArray.
+     */
     private static void fetchTableData() {
         for (int i = 0; i < transactionsArray.size(); i++) {
             row[0] = i;
@@ -245,6 +251,10 @@ public class Transactions extends JFrame {
         }
     }
 
+    /**
+     * Sets input file as transactions_<date>.csv and transfers its data to an ArrayList
+     * @throws IOException IO error handling
+     */
     private static void transactions() throws IOException {
         transactionsFile.setFile(Main.transactionsDir,"transactions_" + fileDate + ".csv");
 
@@ -264,8 +274,11 @@ public class Transactions extends JFrame {
         }
     }
 
+    /**
+     * Prints a CLI version of the Inventory table to the console/log for debugging purposes.
+     */
     private static void printTable() {
-        // Table headers
+        // Table column headers
         System.out.println("--------------------------------------------------------------------------------");
         System.out.printf("| %10s | %10s | %10s | %11s | %10s | %10s |\n",
                 "Record #", "ID", "Name", "Pay Type", "Card Num", "Amount"
@@ -297,6 +310,14 @@ public class Transactions extends JFrame {
         System.out.println("--------------------------------------------------------------------------------");
     }
 
+    /**
+     * Adds a new record of data to the table.
+     * @param id input new ID data.
+     * @param name input new Name data.
+     * @param paymentType input new Payment Type data.
+     * @param cardNumber input Credit Card Number
+     * @param amount input new Amount data
+     */
     public static void addData(
             String id,
             String name,
@@ -316,6 +337,15 @@ public class Transactions extends JFrame {
         saved = false;
     }
 
+    /**
+     * Edit/overwrites the data corresponding to the selected record # from the EditOps combo box.
+     * @param index record # index from recComboBox.
+     * @param id corresponding ID data from selected record #.
+     * @param name corresponding Name data from selected record #.
+     * @param paymentType corresponding Payment Type data from selected record #.
+     * @param cardNumber corresponding Credit Card Number data from selected record #.
+     * @param amount corresponding Amount data from selected record #.
+     */
     public static void editData(
             int index,
             String id,
@@ -336,6 +366,10 @@ public class Transactions extends JFrame {
         saved = false;
     }
 
+    /**
+     * Deletes the selected record # data from the DeleteOps combo box.
+     * @param index record # index from recComboBox.
+     */
     public static void deleteData(int index) {
         transactionsArray.remove(index);
         printTable();
@@ -344,6 +378,10 @@ public class Transactions extends JFrame {
         saved = false;
     }
 
+    /**
+     * Saves the data from the table to a CSV database file.
+     * @throws IOException IO error handling
+     */
     private static void saveData() throws IOException {
 
         FileWriter csvWriter = new FileWriter(
@@ -371,6 +409,11 @@ public class Transactions extends JFrame {
         JOptionPane.showMessageDialog(message, "The data in the table was saved successfully.");
     }
 
+    /**
+     * Initializes the Transactions GUI and its core methods.
+     * Reset dates.
+     * @throws IOException IO error handling
+     */
     public static void launchUI() throws IOException {
         System.out.println("=====TRANSACTIONS MENU=====");
         // Making sure all arrays are cleared

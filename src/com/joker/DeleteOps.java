@@ -4,6 +4,10 @@ import javax.swing.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+/**
+ * DeleteOps GUI
+ * Separate small window that handles the deletion of data in a table.
+ */
 public class DeleteOps extends JFrame {
     private final DecimalFormat df = new DecimalFormat("#0.00"); // Decimal formatting for currency
 
@@ -15,7 +19,6 @@ public class DeleteOps extends JFrame {
     private JLabel stockLabel;
     private JLabel supplierLabel;
     private JLabel nameLabel;
-    private JLabel recordLabel;
     private JTextField nameField;
     private JTextField supplierField;
     private JTextField stockField;
@@ -35,6 +38,13 @@ public class DeleteOps extends JFrame {
     private JPanel mainPanel;
     private JLabel deleteLabel;
 
+    /**
+     * Creates the GUI and its declared Swing components.
+     * @param title set window title.
+     * @param menuType the type of menu where DeleteOps was instantiated from.
+     * @param inputArray0 first ArrayList input.
+     * @param inputArray1 second Arraylist input, set to null when working with only one arraylist.
+     */
     public DeleteOps(String title, int menuType, ArrayList<DataTypes> inputArray0, ArrayList<DataTypes> inputArray1) {
         super(title);
         this.setContentPane(mainPanel);
@@ -42,8 +52,9 @@ public class DeleteOps extends JFrame {
         this.pack();
         this.setLocationRelativeTo(null);
 
-        // set visibility of components based on the menu
+        // Set visibility of components based on the menu type
         switch (menuType) {
+            // Inventory
             case 0 -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
@@ -66,6 +77,7 @@ public class DeleteOps extends JFrame {
                 amountLabel.setVisible(false);
                 amountField.setVisible(false);
             }
+            // Sales
             case 1 -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
@@ -89,6 +101,7 @@ public class DeleteOps extends JFrame {
                 amountLabel.setVisible(true);
                 amountField.setVisible(true);
             }
+            // Transactions
             case 2 -> {
                 idLabel.setVisible(true);
                 idField.setVisible(true);
@@ -203,6 +216,12 @@ public class DeleteOps extends JFrame {
         cancelButton.addActionListener(e -> dispose());
     }
 
+    /**
+     * Initializes the DeleteOps GUI
+     * @param menuType input menu type
+     * @param inputArray0 input first ArrayList
+     * @param inputArray1 input second ArrayList
+     */
     public static void launchUI(int menuType, ArrayList<DataTypes> inputArray0, ArrayList<DataTypes> inputArray1) {
         JFrame frame = new DeleteOps("Delete", menuType, inputArray0, inputArray1);
         frame.setVisible(true);
