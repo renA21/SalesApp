@@ -2,7 +2,6 @@ package com.joker;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -50,7 +49,7 @@ public class MainMenu extends JFrame {
             SimpleDateFormat formatTime = new SimpleDateFormat("hh:mm:ss a yyyy-MM-dd");
             dateLabel.setText(formatTime.format(d));
         }).start();
-        
+
         inventoryButton.addActionListener(e -> {
             try {
                 System.out.println("INFO: Entered Inventory Menu.");
@@ -93,7 +92,7 @@ public class MainMenu extends JFrame {
     }
 
     /**
-     * Initializes the MainMenu GUI
+     * Initializes the MainMenu GUI and other private methods within the class.
      */
     public static void launchUI() {
         System.out.println("=====MAIN MENU=====");

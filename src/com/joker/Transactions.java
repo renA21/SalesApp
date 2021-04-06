@@ -252,7 +252,7 @@ public class Transactions extends JFrame {
     }
 
     /**
-     * Sets input file as transactions_<date>.csv and transfers its data to an ArrayList
+     * Sets input file as transactions_<date>.csv and parses the data from it to an ArrayList.
      * @throws IOException IO error handling
      */
     private static void transactions() throws IOException {
@@ -410,7 +410,7 @@ public class Transactions extends JFrame {
     }
 
     /**
-     * Initializes the Transactions GUI and its core methods.
+     * Initializes the Transactions GUI and other private methods within the class.
      * Reset dates.
      * @throws IOException IO error handling
      */

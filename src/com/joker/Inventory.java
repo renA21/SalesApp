@@ -175,7 +175,7 @@ public class Inventory extends JFrame {
     }
 
     /**
-     * Sets input file as inventory.csv and transfers its data to an ArrayList
+     * Sets input file as inventory.csv and parses the data from it to an ArrayList.
      * @throws IOException IO error handling
      */
     private static void inventory() throws IOException {
@@ -204,11 +204,15 @@ public class Inventory extends JFrame {
      */
     private static void printTable() {
         // Table column headers
-        System.out.println("--------------------------------------------------------------------------------------------");
+        System.out.println(
+                "--------------------------------------------------------------------------------------------"
+        );
         System.out.printf("| %10s | %10s | %10s | %10s | %10s | %10s | %10s |\n",
                 "Record #", "ID", "Name", "Supplier", "Stock", "Location", "Price"
         );
-        System.out.println("--------------------------------------------------------------------------------------------");
+        System.out.println(
+                "--------------------------------------------------------------------------------------------"
+        );
 
         if (invFile.getBuffer().isEmpty() && invArray.isEmpty()) {
             System.out.println("WARNING: Database is empty. There are no records in this database.");
@@ -231,7 +235,9 @@ public class Inventory extends JFrame {
                 );
             }
         }
-        System.out.println("--------------------------------------------------------------------------------------------");
+        System.out.println(
+                "--------------------------------------------------------------------------------------------"
+        );
     }
 
     /**
@@ -339,7 +345,7 @@ public class Inventory extends JFrame {
     }
 
     /**
-     * Initializes the Inventory GUI and its core methods.
+     * Initializes the Inventory GUI and other private methods within the class.
      * @throws IOException IO error handling.
      */
     public static void launchUI() throws IOException {

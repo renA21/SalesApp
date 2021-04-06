@@ -28,9 +28,6 @@ public class Reports extends JFrame {
     private static final DefaultTableModel tableData1 = new DefaultTableModel();
     private static final Object[] salesRow = new Object[7];
     private static final Object[] transactionsRow = new Object[6];
-    private static int totalQuantity = 0;
-    private static double totalPrice = 0;
-    private static double totalRevenue = 0;
     private static LocalDate currentDate;
     private static String fileDate;
     private static int selectedYear;
@@ -93,6 +90,11 @@ public class Reports extends JFrame {
         // Show current table date
         tableDateLabel.setText("Date: " + fileDate);
 
+        // Total labels
+        totalQuantityLabel.setText("Total quantity sold: " + totalQuantity());
+        totalPriceLabel.setText("Total items price: " + totalPrice());
+        totalRevenueLabel.setText("Total revenue: " + totalRevenue());
+
         // Clear column headers of both JTables beforehand
         tableData0.setColumnCount(0);
         tableData1.setColumnCount(0);
@@ -128,11 +130,6 @@ public class Reports extends JFrame {
 
         fetchTableData();
 
-        // Total labels
-        totalQuantityLabel.setText("Total quantity sold: " + totalQuantity);
-        totalPriceLabel.setText("Total items price: " + totalPrice);
-        totalRevenueLabel.setText("Total revenue: " + totalRevenue);
-
         menuButton.addActionListener(e -> {
             System.out.println("INFO: Entered Main Menu.");
             MainMenu.launchUI();
@@ -143,9 +140,6 @@ public class Reports extends JFrame {
             salesArray.clear();
             transactionsFile.getBuffer().clear();
             transactionsArray.clear();
-            totalQuantity = 0;
-            totalPrice = 0;
-            totalRevenue = 0;
             dispose();
         });
 
@@ -172,6 +166,10 @@ public class Reports extends JFrame {
                 tableData0.setRowCount(0);
                 tableData1.setRowCount(0);
                 fetchTableData();
+                // Total labels
+                totalQuantityLabel.setText("Total quantity sold: " + totalQuantity());
+                totalPriceLabel.setText("Total items price: " + totalPrice());
+                totalRevenueLabel.setText("Total revenue: " + totalRevenue());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -201,6 +199,10 @@ public class Reports extends JFrame {
                 tableData0.setRowCount(0);
                 tableData1.setRowCount(0);
                 fetchTableData();
+                // Total labels
+                totalQuantityLabel.setText("Total quantity sold: " + totalQuantity());
+                totalPriceLabel.setText("Total items price: " + totalPrice());
+                totalRevenueLabel.setText("Total revenue: " + totalRevenue());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -231,6 +233,10 @@ public class Reports extends JFrame {
                 tableData0.setRowCount(0);
                 tableData1.setRowCount(0);
                 fetchTableData();
+                // Total labels
+                totalQuantityLabel.setText("Total quantity sold: " + totalQuantity());
+                totalPriceLabel.setText("Total items price: " + totalPrice());
+                totalRevenueLabel.setText("Total revenue: " + totalRevenue());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -260,6 +266,10 @@ public class Reports extends JFrame {
                 tableData0.setRowCount(0);
                 tableData1.setRowCount(0);
                 fetchTableData();
+                // Total labels
+                totalQuantityLabel.setText("Total quantity sold: " + totalQuantity());
+                totalPriceLabel.setText("Total items price: " + totalPrice());
+                totalRevenueLabel.setText("Total revenue: " + totalRevenue());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -289,6 +299,10 @@ public class Reports extends JFrame {
                 tableData0.setRowCount(0);
                 tableData1.setRowCount(0);
                 fetchTableData();
+                // Total labels
+                totalQuantityLabel.setText("Total quantity sold: " + totalQuantity());
+                totalPriceLabel.setText("Total items price: " + totalPrice());
+                totalRevenueLabel.setText("Total revenue: " + totalRevenue());
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
@@ -324,7 +338,7 @@ public class Reports extends JFrame {
     }
 
     /**
-     * Handles the input of both the Sales and Transactions tables altogether.
+     * Handles the input of both the Sales and Transactions data tables altogether.
      * @throws IOException IO error handling
      */
     private static void reports() throws IOException {
@@ -391,7 +405,7 @@ public class Reports extends JFrame {
     }
 
     /**
-     * Sales table data handling from reports method
+     * Sales table data handling from reports() method
      */
     private static void sales() {
         // Remove first row if column headers exist.
@@ -419,43 +433,63 @@ public class Reports extends JFrame {
     }
 
     /**
-     * Calculates and sets the total quantity and price
+     * Calculates the total quantity sold within a month
+     * @return total item quantity value
      */
-    private static void total() {
-        for (DataTypes dataTypes : salesArray) {
-            totalQuantity += dataTypes.getQuantity();
-            totalPrice += dataTypes.getAmount();
+    private int totalQuantity() {
+        int total = 0;
+        for (DataTypes dataTypes : Reports.salesArray) {
+            total += dataTypes.getQuantity();
         }
-
+        return total;
     }
 
     /**
-     * Transactions table data handling from reports method
+     * Calculates the total price of the sold items within a month
+     * @return total price value of all items
+     */
+    private double totalPrice() {
+        double total = 0;
+        for (DataTypes dataTypes : Reports.salesArray) {
+            total += dataTypes.getAmount();
+        }
+        return total;
+    }
+
+    /**
+     * Calculates the total revenue of transactions within a month
+     * @return total transactions revenue value
+     */
+    private double totalRevenue() {
+        double total = 0;
+        for (DataTypes dataTypes : Reports.transactionsArray) {
+            total += dataTypes.getAmount();
+        }
+        return total;
+    }
+
+    /**
+     * Transactions table data handling from reports() method
      */
     private static void transactions() {
-        if (!transactionsFile.existence) {
-            totalRevenue = totalRevenue + 0;
-        } else {
-            // Remove first row if column headers exist
-            if (!transactionsFile.getBuffer().isEmpty() && transactionsFile.getBuffer().get(0).get(0).equals("ID")) {
-                transactionsFile.getBuffer().remove(0);
-            }
-            for (int i = 0; i < transactionsFile.getBuffer().size(); i++) {
-                if (transactionsFile.getBuffer().get(i).get(0).equals("ID")) {
-                    continue;
-                }
-                DataTypes data1 = new DataTypes();
-                data1.setID(transactionsFile.getBuffer().get(i).get(0));
-                data1.setName(transactionsFile.getBuffer().get(i).get(1));
-                data1.setPaymentType(transactionsFile.getBuffer().get(i).get(2));
-                data1.setCardNumber(transactionsFile.getBuffer().get(i).get(3));
-                data1.setAmount(Double.parseDouble(transactionsFile.getBuffer().get(i).get(4)));
-                transactionsArray.add(data1);
-                totalRevenue = totalRevenue + transactionsArray.get(i).getAmount();
-            }
-            // Clear buffer to prevent duplication of records from previously read databases
-            transactionsFile.getBuffer().clear();
+        // Remove first row if column headers exist
+        if (!transactionsFile.getBuffer().isEmpty() && transactionsFile.getBuffer().get(0).get(0).equals("ID")) {
+            transactionsFile.getBuffer().remove(0);
         }
+        for (int i = 0; i < transactionsFile.getBuffer().size(); i++) {
+            if (transactionsFile.getBuffer().get(i).get(0).equals("ID")) {
+                continue;
+            }
+            DataTypes data1 = new DataTypes();
+            data1.setID(transactionsFile.getBuffer().get(i).get(0));
+            data1.setName(transactionsFile.getBuffer().get(i).get(1));
+            data1.setPaymentType(transactionsFile.getBuffer().get(i).get(2));
+            data1.setCardNumber(transactionsFile.getBuffer().get(i).get(3));
+            data1.setAmount(Double.parseDouble(transactionsFile.getBuffer().get(i).get(4)));
+            transactionsArray.add(data1);
+        }
+        // Clear buffer to prevent duplication of records from previously read databases
+        transactionsFile.getBuffer().clear();
     }
 
     /**
@@ -543,7 +577,7 @@ public class Reports extends JFrame {
     }
 
     /**
-     * Initializes the Reports GUI and its core methods.
+     * Initializes the Reports GUI and other private methods within the class.
      * Reset dates.
      * @throws IOException IO error handling
      */
@@ -557,7 +591,6 @@ public class Reports extends JFrame {
         reports();
         printSalesTable();
         printTransactionsTable();
-        total();
         JFrame frame = new Reports("SalesApp " + Main.version + " | Reports");
         frame.setVisible(true);
     }

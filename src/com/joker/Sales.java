@@ -259,7 +259,7 @@ public class Sales extends JFrame {
     }
 
     /**
-     * Sets input file as inventory.csv & sales_<date>.csv and transfers its data to two ArrayLists
+     * Sets input file as inventory.csv & sales_<date>.csv and parses the data from it to an ArrayList.
      * @throws IOException IO error handling
      */
     private static void sales() throws IOException {
@@ -447,7 +447,7 @@ public class Sales extends JFrame {
     }
 
     /**
-     * Initializes the Sales GUI and its core methods.
+     * Initializes the Sales GUI and other private methods within the class.
      * Reset dates.
      * @throws IOException IO error handling.
      */
