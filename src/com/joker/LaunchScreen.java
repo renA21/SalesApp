@@ -12,7 +12,7 @@ public class LaunchScreen extends JFrame {
 
     /**
      * Creates the GUI and its declared Swing components.
-     * @param title set window title.
+     * @param title Title name for the window.
      */
     public LaunchScreen(String title) {
         super(title);

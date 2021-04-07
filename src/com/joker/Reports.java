@@ -3,6 +3,8 @@ package com.joker;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -14,7 +16,8 @@ import java.util.Date;
  * Reports GUI
  */
 public class Reports extends JFrame {
-    private static final DecimalFormat currencyFormat = new DecimalFormat("#0.00"); // Currency format
+    // Decimal format for currency
+    private static final DecimalFormat df = new DecimalFormat("#0.00");
     private static final DecimalFormat dayFormat = new DecimalFormat("00");
     private static final FileOps invFile = new FileOps();
     private static final FileOps salesFile = new FileOps();
@@ -56,7 +59,7 @@ public class Reports extends JFrame {
 
     /**
      * Creates the GUI and its declared Swing components.
-     * @param title set window title.
+     * @param title Title name for the window.
      */
     public Reports(String title) {
         super(title);
@@ -67,11 +70,12 @@ public class Reports extends JFrame {
 
         // Exit confirmation when closing the window
         JFrame confirmExit = new JFrame();
-        addWindowListener(new java.awt.event.WindowAdapter() {
+        addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+            public void windowClosing(WindowEvent windowEvent) {
                 int option = JOptionPane.showConfirmDialog(confirmExit,
-                        "Are you sure you want to exit? Any unsaved changes will be lost.",
+                        "Are you sure you want to exit? " +
+                                "Any unsaved changes will be lost.",
                         "Exit", JOptionPane.YES_NO_OPTION);
                 if (option == JOptionPane.YES_OPTION) {
                     System.out.println("INFO: The program closed successfully.");
@@ -134,11 +138,11 @@ public class Reports extends JFrame {
             System.out.println("INFO: Entered Main Menu.");
             MainMenu.launchUI();
             // Clear all arrays
-            invFile.getBuffer().clear();
+            invFile.getInputBuffer().clear();
             invArray.clear();
-            salesFile.getBuffer().clear();
+            salesFile.getInputBuffer().clear();
             salesArray.clear();
-            transactionsFile.getBuffer().clear();
+            transactionsFile.getInputBuffer().clear();
             transactionsArray.clear();
             dispose();
         });
@@ -154,11 +158,11 @@ public class Reports extends JFrame {
             tableDateLabel.setText("Date: " + fileDate);
             try {
                 // Clear all arrays
-                invFile.getBuffer().clear();
+                invFile.getInputBuffer().clear();
                 invArray.clear();
-                salesFile.getBuffer().clear();
+                salesFile.getInputBuffer().clear();
                 salesArray.clear();
-                transactionsFile.getBuffer().clear();
+                transactionsFile.getInputBuffer().clear();
                 transactionsArray.clear();
                 reports();
                 printSalesTable();
@@ -187,11 +191,11 @@ public class Reports extends JFrame {
             tableDateLabel.setText("Date: " + fileDate);
             try {
                 // Clear all arrays
-                invFile.getBuffer().clear();
+                invFile.getInputBuffer().clear();
                 invArray.clear();
-                salesFile.getBuffer().clear();
+                salesFile.getInputBuffer().clear();
                 salesArray.clear();
-                transactionsFile.getBuffer().clear();
+                transactionsFile.getInputBuffer().clear();
                 transactionsArray.clear();
                 reports();
                 printSalesTable();
@@ -221,11 +225,11 @@ public class Reports extends JFrame {
             tableDateLabel.setText("Date: " + fileDate);
             try {
                 // Clear all arrays
-                invFile.getBuffer().clear();
+                invFile.getInputBuffer().clear();
                 invArray.clear();
-                salesFile.getBuffer().clear();
+                salesFile.getInputBuffer().clear();
                 salesArray.clear();
-                transactionsFile.getBuffer().clear();
+                transactionsFile.getInputBuffer().clear();
                 transactionsArray.clear();
                 reports();
                 printSalesTable();
@@ -254,11 +258,11 @@ public class Reports extends JFrame {
             tableDateLabel.setText("Date: " + fileDate);
             try {
                 // Clear all arrays
-                invFile.getBuffer().clear();
+                invFile.getInputBuffer().clear();
                 invArray.clear();
-                salesFile.getBuffer().clear();
+                salesFile.getInputBuffer().clear();
                 salesArray.clear();
-                transactionsFile.getBuffer().clear();
+                transactionsFile.getInputBuffer().clear();
                 transactionsArray.clear();
                 reports();
                 printSalesTable();
@@ -287,11 +291,11 @@ public class Reports extends JFrame {
             tableDateLabel.setText("Date: " + fileDate);
             try {
                 // Clear all arrays
-                invFile.getBuffer().clear();
+                invFile.getInputBuffer().clear();
                 invArray.clear();
-                salesFile.getBuffer().clear();
+                salesFile.getInputBuffer().clear();
                 salesArray.clear();
-                transactionsFile.getBuffer().clear();
+                transactionsFile.getInputBuffer().clear();
                 transactionsArray.clear();
                 reports();
                 printSalesTable();
@@ -319,9 +323,9 @@ public class Reports extends JFrame {
             salesRow[1] = invArray.get(i).getID();
             salesRow[2] = invArray.get(i).getName();
             salesRow[3] = invArray.get(i).getSupplier();
-            salesRow[4] = currencyFormat.format(invArray.get(i).getPrice());
+            salesRow[4] = df.format(invArray.get(i).getPrice());
             salesRow[5] = salesArray.get(i).getQuantity();
-            salesRow[6] = currencyFormat.format(salesArray.get(i).getAmount());
+            salesRow[6] = df.format(salesArray.get(i).getAmount());
             tableData0.addRow(salesRow);
         }
 
@@ -332,7 +336,7 @@ public class Reports extends JFrame {
             transactionsRow[2] = transactionsArray.get(i).getName();
             transactionsRow[3] = transactionsArray.get(i).getPaymentType();
             transactionsRow[4] = transactionsArray.get(i).getCardNumber();
-            transactionsRow[5] = currencyFormat.format(transactionsArray.get(i).getAmount());
+            transactionsRow[5] = df.format(transactionsArray.get(i).getAmount());
             tableData1.addRow(transactionsRow);
         }
     }
@@ -354,17 +358,29 @@ public class Reports extends JFrame {
         }
 
         // Remove first row if column headers exist
-        if (!invFile.getBuffer().isEmpty() && invFile.getBuffer().get(0).get(0).equals("ID")) {
-            invFile.getBuffer().remove(0);
+        if (!invFile.getInputBuffer().isEmpty() &&
+                invFile.getInputBuffer().get(0).get(0).equals("ID")
+        ) {
+            invFile.getInputBuffer().remove(0);
         }
 
-        for (int i = 0; i < invFile.getBuffer().size(); i++) {
+        for (int i = 0; i < invFile.getInputBuffer().size(); i++) {
             data = new DataTypes();
-            data.setID(invFile.getBuffer().get(i).get(0));
-            data.setName(invFile.getBuffer().get(i).get(1));
-            data.setSupplier(invFile.getBuffer().get(i).get(2));
-            data.setLocation(invFile.getBuffer().get(i).get(4));
-            data.setPrice(Double.parseDouble(invFile.getBuffer().get(i).get(5)));
+            data.setID(
+                    invFile.getInputBuffer().get(i).get(0)
+            );
+            data.setName(
+                    invFile.getInputBuffer().get(i).get(1)
+            );
+            data.setSupplier(
+                    invFile.getInputBuffer().get(i).get(2)
+            );
+            data.setLocation(
+                    invFile.getInputBuffer().get(i).get(4)
+            );
+            data.setPrice(
+                    Double.parseDouble(invFile.getInputBuffer().get(i).get(5))
+            );
             invArray.add(data);
         }
 
@@ -392,7 +408,8 @@ public class Reports extends JFrame {
         }
 
         for (int i = 1; i <= 31; i++) {
-            transactionsFile.setFile(Main.transactionsDir,"transactions_" +
+            transactionsFile.setFile(Main.transactionsDir,
+                    "transactions_" +
                     selectedYear +
                     "-" +
                     dayFormat.format(selectedMonth) +
@@ -409,20 +426,24 @@ public class Reports extends JFrame {
      */
     private static void sales() {
         // Remove first row if column headers exist.
-        if (!salesFile.getBuffer().isEmpty() && salesFile.getBuffer().get(0).get(4).equals("Quantity")) {
-            salesFile.getBuffer().remove(0);
+        if (!salesFile.getInputBuffer().isEmpty() &&
+                salesFile.getInputBuffer().get(0).get(4).equals("Quantity")
+        ) {
+            salesFile.getInputBuffer().remove(0);
         }
         for (int i = 0; i < invArray.size(); i++) {
             data = new DataTypes();
             // Set quantity to zero to fill in non-existent sales data
-            if (i >= salesFile.getBuffer().size()) {
+            if (i >= salesFile.getInputBuffer().size()) {
                 data.setQuantity(0);
             } else {
-                data.setQuantity(Integer.parseInt(salesFile.getBuffer().get(i).get(4)));
+                data.setQuantity(
+                        Integer.parseInt(salesFile.getInputBuffer().get(i).get(4))
+                );
             }
             inputSalesArray.add(data);
         }
-        salesFile.getBuffer().clear();
+        salesFile.getInputBuffer().clear();
         for (int i = 0; i < invArray.size(); i++) {
             int temp = salesArray.get(i).getQuantity();
             salesArray.set(i, data = new DataTypes());
@@ -473,23 +494,35 @@ public class Reports extends JFrame {
      */
     private static void transactions() {
         // Remove first row if column headers exist
-        if (!transactionsFile.getBuffer().isEmpty() && transactionsFile.getBuffer().get(0).get(0).equals("ID")) {
-            transactionsFile.getBuffer().remove(0);
+        if (!transactionsFile.getInputBuffer().isEmpty() &&
+                transactionsFile.getInputBuffer().get(0).get(0).equals("ID")
+        ) {
+            transactionsFile.getInputBuffer().remove(0);
         }
-        for (int i = 0; i < transactionsFile.getBuffer().size(); i++) {
-            if (transactionsFile.getBuffer().get(i).get(0).equals("ID")) {
+        for (int i = 0; i < transactionsFile.getInputBuffer().size(); i++) {
+            if (transactionsFile.getInputBuffer().get(i).get(0).equals("ID")) {
                 continue;
             }
             DataTypes data1 = new DataTypes();
-            data1.setID(transactionsFile.getBuffer().get(i).get(0));
-            data1.setName(transactionsFile.getBuffer().get(i).get(1));
-            data1.setPaymentType(transactionsFile.getBuffer().get(i).get(2));
-            data1.setCardNumber(transactionsFile.getBuffer().get(i).get(3));
-            data1.setAmount(Double.parseDouble(transactionsFile.getBuffer().get(i).get(4)));
+            data1.setID(
+                    transactionsFile.getInputBuffer().get(i).get(0)
+            );
+            data1.setName(
+                    transactionsFile.getInputBuffer().get(i).get(1)
+            );
+            data1.setPaymentType(
+                    transactionsFile.getInputBuffer().get(i).get(2)
+            );
+            data1.setCardNumber(
+                    transactionsFile.getInputBuffer().get(i).get(3)
+            );
+            data1.setAmount(
+                    Double.parseDouble(transactionsFile.getInputBuffer().get(i).get(4))
+            );
             transactionsArray.add(data1);
         }
         // Clear buffer to prevent duplication of records from previously read databases
-        transactionsFile.getBuffer().clear();
+        transactionsFile.getInputBuffer().clear();
     }
 
     /**
@@ -498,23 +531,26 @@ public class Reports extends JFrame {
     private static void printSalesTable() {
         // Table headers
         System.out.println(
-                "--------------------------------------------------------------------------------------------"
+                "---------------------------------------------" +
+                        "-----------------------------------------------"
         );
         System.out.printf("| %10s | %10s | %10s | %10s | %10s | %10s | %10s |\n",
                 "Record #", "ID", "Name", "Supplier", "Price", "Quantity", "Amount"
         );
         System.out.println(
-                "--------------------------------------------------------------------------------------------"
+                "---------------------------------------------" +
+                        "-----------------------------------------------"
         );
 
-        if (salesFile.getBuffer().isEmpty() && salesArray.isEmpty()) {
+        if (salesFile.getInputBuffer().isEmpty() && salesArray.isEmpty()) {
             System.out.println("WARNING: File not found or Sales database is empty. " +
                     "There are no records for quantity during the selected month/year.");
             JFrame alert = new JFrame();
             JOptionPane.showMessageDialog(
                     alert,
                     "File not found or Sales database is empty." +
-                            "\nThere are no records for quantity during the selected month/year.",
+                            "\nThere are no records for quantity " +
+                            "during the selected month/year.",
                     "Alert", JOptionPane.WARNING_MESSAGE
             );
         } else {
@@ -534,7 +570,8 @@ public class Reports extends JFrame {
             }
         }
         System.out.println(
-                "--------------------------------------------------------------------------------------------"
+                "---------------------------------------------" +
+                        "-----------------------------------------------"
         );
     }
 
@@ -543,14 +580,15 @@ public class Reports extends JFrame {
      */
     private static void printTransactionsTable() {
         // Table headers
-        System.out.println("--------------------------------------------------------------------------------");
+        System.out.println("----------------------------------" +
+                "----------------------------------------------");
         System.out.printf("| %10s | %10s | %10s | %11s | %10s | %10s |\n",
                 "Record #", "ID", "Name", "Pay Type", "Card Num", "Amount"
         );
-        System.out.println("--------------------------------------------------------------------------------");
+        System.out.println("----------------------------------" +
+                "----------------------------------------------");
 
-        if (transactionsFile.getBuffer().isEmpty() && transactionsArray.isEmpty()) {
-
+        if (transactionsFile.getInputBuffer().isEmpty() && transactionsArray.isEmpty()) {
             System.out.println("WARNING: Transactions database is empty. " +
                     "There are no records during the selected month/year.");
             JFrame alert = new JFrame();
@@ -562,7 +600,6 @@ public class Reports extends JFrame {
             );
         } else {
             for (int i = 0; i < transactionsArray.size(); i++) {
-
                 System.out.printf("| %10s | %10s | %10s | %11s | %10s | %10.2f |\n",
                         i,
                         transactionsArray.get(i).getID(),
@@ -573,7 +610,8 @@ public class Reports extends JFrame {
                 );
             }
         }
-        System.out.println("--------------------------------------------------------------------------------");
+        System.out.println("----------------------------------" +
+                "----------------------------------------------");
     }
 
     /**
@@ -585,7 +623,8 @@ public class Reports extends JFrame {
         System.out.println("=====REPORTS MENU=====");
         // Default to today's time
         currentDate = LocalDate.now();
-        fileDate = currentDate.getYear() + "-" + dayFormat.format(currentDate.getMonthValue());
+        fileDate = currentDate.getYear() +
+                "-" + dayFormat.format(currentDate.getMonthValue());
         selectedYear = currentDate.getYear();
         selectedMonth = currentDate.getMonthValue();
         reports();

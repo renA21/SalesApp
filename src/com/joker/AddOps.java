@@ -40,8 +40,8 @@ public class AddOps extends JFrame {
 
     /**
      * Creates the GUI and its declared Swing components.
-     * @param title set window title.
-     * @param menuType the type of menu where DeleteOps was instantiated from.
+     * @param title Title name for the window.
+     * @param menuType The type of menu where DeleteOps was instantiated from.
      */
     public AddOps(String title, int menuType) {
 
@@ -170,7 +170,9 @@ public class AddOps extends JFrame {
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
                 stockField.setEditable(
-                        e.getKeyChar() >= '0' && e.getKeyChar() <= '9' || e.getKeyCode() == KeyEvent.VK_BACK_SPACE
+                        e.getKeyChar() >= '0' &&
+                        e.getKeyChar() <= '9' ||
+                        e.getKeyCode() == KeyEvent.VK_BACK_SPACE
                 );
             }
         });
@@ -224,7 +226,7 @@ public class AddOps extends JFrame {
             }
         });
 
-        // Disable text field if selected as Cash and set N/A as its default value
+        // Disable text field if selected as "Cash" and set "N/A" as its default value.
         payComboBox.addActionListener(e -> {
             if (payComboBox.getSelectedIndex() == 1) {
                 cardField.setText("N/A");

@@ -16,20 +16,23 @@ import java.util.Date;
  * Sales GUI
  */
 public class Sales extends JFrame {
-    private static final DecimalFormat currencyFormat = new DecimalFormat("#0.00"); // Currency format
+    // Decimal formatting for currency
+    private static final DecimalFormat currencyFormat = new DecimalFormat("#0.00");
     private static final FileOps invFile = new FileOps();
     private static final FileOps salesFile = new FileOps();
     private static DataTypes data;
     private static final ArrayList<DataTypes> invArray = new ArrayList<>();
     private static final ArrayList<DataTypes> salesArray = new ArrayList<>();
-    private static boolean saved = true; // Flag that determines whether changes have been made to the table
+    // Flag that determines whether changes have been made to the table
+    private static boolean saved = true;
     private static final DefaultTableModel tableData = new DefaultTableModel();
     private static final Object[] row = new Object[7];
     private static LocalDate currentDate = LocalDate.now();
     private static String fileDate;
     private static int prevDayCount = 0;
     private static int nextDayCount = 0;
-    private static final int menuType = 1; // 0 = Inventory, 1 = Sales, 2 = Transactions
+    // 0 = Inventory, 1 = Sales, 2 = Transactions
+    private static final int menuType = 1;
 
     private JPanel mainPanel;
     private JButton menuButton;
@@ -47,7 +50,7 @@ public class Sales extends JFrame {
 
     /**
      * Creates the GUI and its declared Swing components.
-     * @param title set window title.
+     * @param title Title name for the window.
      */
     public Sales(String title) {
         super(title);
@@ -62,7 +65,8 @@ public class Sales extends JFrame {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 int option = JOptionPane.showConfirmDialog(confirmExit,
-                        "Are you sure you want to exit? Any unsaved changes will be lost.",
+                        "Are you sure you want to exit? " +
+                                "Any unsaved changes will be lost.",
                         "Exit", JOptionPane.YES_NO_OPTION);
                 if (option == JOptionPane.YES_OPTION) {
                     System.out.println("INFO: The program closed successfully.");
@@ -104,20 +108,21 @@ public class Sales extends JFrame {
         menuButton.addActionListener(e -> {
             if (saved) {
                 System.out.println("INFO: Entered Main Menu.");
-                salesFile.getBuffer().clear(); // clear buffer
+                salesFile.getInputBuffer().clear(); // clear buffer
                 salesArray.clear();
                 MainMenu.launchUI();
                 dispose();
             } else {
                 int option = JOptionPane.showConfirmDialog(confirmExit,
-                        "Changes were made to the database. Any unsaved data will be lost. Do you want to continue?",
+                        "Changes were made to the database. " +
+                                "Any unsaved data will be lost. Do you want to continue?",
                         "Unsaved Changes", JOptionPane.YES_NO_OPTION);
                 if (option == JOptionPane.YES_OPTION) {
                     System.out.println("WARNING: Changes in the table were not saved.");
                     System.out.println("INFO: Entered Main Menu.");
                     // Clear all arrays
-                    invFile.getBuffer().clear();
-                    salesFile.getBuffer().clear();
+                    invFile.getInputBuffer().clear();
+                    salesFile.getInputBuffer().clear();
                     invArray.clear();
                     salesArray.clear();
                     prevDayCount = 0;
@@ -176,8 +181,8 @@ public class Sales extends JFrame {
             readFile.setText("Read File: sales_" + fileDate + ".csv");
             tableDateLabel.setText("Date: " + fileDate);
             try {
-                invFile.getBuffer().clear();
-                salesFile.getBuffer().clear(); // clear buffer
+                invFile.getInputBuffer().clear();
+                salesFile.getInputBuffer().clear(); // clear buffer
                 invArray.clear();
                 salesArray.clear();
                 sales();
@@ -202,8 +207,8 @@ public class Sales extends JFrame {
             readFile.setText("Read File: sales_" + fileDate + ".csv");
             tableDateLabel.setText("Date: " + fileDate);
             try {
-                invFile.getBuffer().clear();
-                salesFile.getBuffer().clear(); // clear buffer
+                invFile.getInputBuffer().clear();
+                salesFile.getInputBuffer().clear(); // clear buffer
                 invArray.clear();
                 salesArray.clear();
                 sales();
@@ -228,8 +233,8 @@ public class Sales extends JFrame {
             readFile.setText("Read File: sales_" + fileDate + ".csv");
             tableDateLabel.setText("Date: " + fileDate);
             try {
-                invFile.getBuffer().clear();
-                salesFile.getBuffer().clear(); // clear buffer
+                invFile.getInputBuffer().clear();
+                salesFile.getInputBuffer().clear(); // clear buffer
                 invArray.clear();
                 salesArray.clear();
                 sales();
@@ -267,12 +272,14 @@ public class Sales extends JFrame {
         invFile.setFile(Main.dataDir,"inventory.csv");
 
         // Check for inventory.csv existence
-        if (!invFile.existence || invFile.getBuffer().isEmpty()) {
+        if (!invFile.existence || invFile.getInputBuffer().isEmpty()) {
             JFrame alert = new JFrame();
             JOptionPane.showMessageDialog(
                     alert,
-                    "Inventory database not found or empty. There are no records in this database." +
-                            "\nCreate an inventory database by adding new records in the Inventory menu and try again.",
+                    "Inventory database not found or empty. " +
+                            "There are no records in this database." +
+                            "\nCreate an inventory database by adding new " +
+                            "records in the Inventory menu and try again.",
                     "Alert", JOptionPane.WARNING_MESSAGE
             );
         }
@@ -280,45 +287,57 @@ public class Sales extends JFrame {
         salesFile.setFile(Main.salesDir,"sales_" + fileDate + ".csv");
 
         // Remove first row if column headers exist.
-        if (!salesFile.getBuffer().isEmpty() && salesFile.getBuffer().get(0).get(0).equals("ID")) {
-            salesFile.getBuffer().remove(0);
+        if (!salesFile.getInputBuffer().isEmpty() &&
+                salesFile.getInputBuffer().get(0).get(0).equals("ID")
+        ) {
+            salesFile.getInputBuffer().remove(0);
         }
-        if (!invFile.getBuffer().isEmpty() && invFile.getBuffer().get(0).get(0).equals("ID")) {
-            invFile.getBuffer().remove(0);
+        if (!invFile.getInputBuffer().isEmpty() &&
+                invFile.getInputBuffer().get(0).get(0).equals("ID")
+        ) {
+            invFile.getInputBuffer().remove(0);
         }
 
-        for (int i = 0; i < invFile.getBuffer().size(); i++) {
+        for (int i = 0; i < invFile.getInputBuffer().size(); i++) {
             data = new DataTypes();
-            data.setID(invFile.getBuffer().get(i).get(0));
-            data.setName(invFile.getBuffer().get(i).get(1));
-            data.setSupplier(invFile.getBuffer().get(i).get(2));
-            data.setLocation(invFile.getBuffer().get(i).get(4));
-            data.setPrice(Double.parseDouble(invFile.getBuffer().get(i).get(5)));
+            data.setID(invFile.getInputBuffer().get(i).get(0));
+            data.setName(invFile.getInputBuffer().get(i).get(1));
+            data.setSupplier(invFile.getInputBuffer().get(i).get(2));
+            data.setLocation(invFile.getInputBuffer().get(i).get(4));
+            data.setPrice(Double.parseDouble(invFile.getInputBuffer().get(i).get(5)));
             invArray.add(data);
         }
 
         // Get array size from salesFile if it exists
         if (salesFile.getCsvFile().exists()) {
-            for (int i = 0; i < salesFile.getBuffer().size(); i++) {
+            for (int i = 0; i < salesFile.getInputBuffer().size(); i++) {
                 data = new DataTypes();
-                if (salesFile.getBuffer().isEmpty()) {
+                if (salesFile.getInputBuffer().isEmpty()) {
                     data.setQuantity(0);
                     data.setAmount(0);
                 } else {
-                    data.setQuantity(Integer.parseInt(salesFile.getBuffer().get(i).get(4)));
-                    data.setAmount(Double.parseDouble(salesFile.getBuffer().get(i).get(5)));
+                    data.setQuantity(
+                            Integer.parseInt(salesFile.getInputBuffer().get(i).get(4))
+                    );
+                    data.setAmount(
+                            Double.parseDouble(salesFile.getInputBuffer().get(i).get(5))
+                    );
                 }
                 salesArray.add(data);
             }
         } else {
-            for (int i = 0; i < invFile.getBuffer().size(); i++) {
+            for (int i = 0; i < invFile.getInputBuffer().size(); i++) {
                 data = new DataTypes();
-                if (salesFile.getBuffer().isEmpty()) {
+                if (salesFile.getInputBuffer().isEmpty()) {
                     data.setQuantity(0);
                     data.setAmount(0);
                 } else {
-                    data.setQuantity(Integer.parseInt(salesFile.getBuffer().get(i).get(4)));
-                    data.setAmount(Double.parseDouble(salesFile.getBuffer().get(i).get(5)));
+                    data.setQuantity(
+                            Integer.parseInt(salesFile.getInputBuffer().get(i).get(4))
+                    );
+                    data.setAmount(
+                            Double.parseDouble(salesFile.getInputBuffer().get(i).get(5))
+                    );
                 }
                 salesArray.add(data);
             }
@@ -331,17 +350,20 @@ public class Sales extends JFrame {
     private static void printTable() {
         // Table column headers
         System.out.println(
-                "--------------------------------------------------------------------------------------------"
+                "----------------------------------------------" +
+                        "----------------------------------------------"
         );
         System.out.printf("| %10s | %10s | %10s | %10s | %10s | %10s | %10s |\n",
                 "Record #", "ID", "Name", "Supplier", "Price", "Quantity", "Amount"
         );
         System.out.println(
-                "--------------------------------------------------------------------------------------------"
+                "----------------------------------------------" +
+                        "----------------------------------------------"
         );
 
-        if (invFile.getBuffer().isEmpty() && invArray.isEmpty()) {
-            System.out.println("WARNING: Database is empty. There are no records in this database.");
+        if (invFile.getInputBuffer().isEmpty() && invArray.isEmpty()) {
+            System.out.println("WARNING: Database is empty. " +
+                    "There are no records in this database.");
         } else {
             for (int i = 0; i < invArray.size(); i++) {
                 System.out.printf("| %10s | %10s | %10s | %10s | %10.2f |",
@@ -359,7 +381,8 @@ public class Sales extends JFrame {
             }
         }
         System.out.println(
-                "--------------------------------------------------------------------------------------------"
+                "----------------------------------------------" +
+                        "----------------------------------------------"
         );
     }
 
@@ -418,7 +441,6 @@ public class Sales extends JFrame {
      * @throws IOException IO error handling.
      */
     private static void saveData() throws IOException {
-
         FileWriter csvWriter = new FileWriter(
                 new File(Main.salesDir,"sales_" + fileDate + ".csv")
         );
@@ -443,7 +465,9 @@ public class Sales extends JFrame {
         csvWriter.close();
         System.out.println("Changes saved!");
         JFrame message = new JFrame();
-        JOptionPane.showMessageDialog(message, "The data in the table was saved successfully.");
+        JOptionPane.showMessageDialog(message,
+                "The data in the table was saved successfully."
+        );
     }
 
     /**
@@ -454,8 +478,8 @@ public class Sales extends JFrame {
     public static void launchUI() throws IOException {
         System.out.println("=====SALES MENU=====");
         // Making sure all arrays are cleared
-        invFile.getBuffer().clear();
-        salesFile.getBuffer().clear();
+        invFile.getInputBuffer().clear();
+        salesFile.getInputBuffer().clear();
         invArray.clear();
         salesArray.clear();
         // Default to today's time

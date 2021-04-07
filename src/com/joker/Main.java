@@ -32,9 +32,9 @@ public class Main {
     }
 
     /**
-     * Main method, the starting point of the program
-     * Creates directories to store the database files
-     * @param args command line arguments
+     * Main method, the starting point of the program.
+     * Creates directories to store the database files.
+     * @param args Sets command line arguments.
      */
     public static void main(String[] args) {
         if (logging) {

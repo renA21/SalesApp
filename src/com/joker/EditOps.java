@@ -42,12 +42,17 @@ public class EditOps extends JFrame {
 
     /**
      * Creates the GUI and its declared Swing components.
-     * @param title set window title.
-     * @param menuType the type of menu where DeleteOps was instantiated from.
-     * @param inputArray0 first ArrayList input.
-     * @param inputArray1 second Arraylist input, set to null when working with only one arraylist.
+     * @param title Title name for the window.
+     * @param menuType The type of menu where DeleteOps was instantiated from.
+     * @param inputArray0 Setting the first ArrayList.
+     * @param inputArray1 Setting the second Arraylist. Set to null when working with only one Arraylist.
      */
-    public EditOps(String title, int menuType, ArrayList<DataTypes> inputArray0, ArrayList<DataTypes> inputArray1) {
+    public EditOps(
+            String title,
+            int menuType,
+            ArrayList<DataTypes> inputArray0,
+            ArrayList<DataTypes> inputArray1
+    ) {
         super(title);
         this.setContentPane(mainPanel);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -144,38 +149,67 @@ public class EditOps extends JFrame {
         }
 
         // Fill the text fields/combo boxes corresponding to the selected record #.
-        idField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getID());
-        nameField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getName());
-        supplierField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getSupplier());
-        stockField.setText(Integer.toString(inputArray0.get(recComboBox.getSelectedIndex()).getStock()));
+        idField.setText(
+                inputArray0.get(recComboBox.getSelectedIndex()).getID()
+        );
+        nameField.setText(
+                inputArray0.get(recComboBox.getSelectedIndex()).getName()
+        );
+        supplierField.setText(
+                inputArray0.get(recComboBox.getSelectedIndex()).getSupplier()
+        );
+        stockField.setText(
+                Integer.toString(inputArray0.get(recComboBox.getSelectedIndex()).getStock())
+        );
         if (menuType == 0) {
-            if (inputArray0.get(recComboBox.getSelectedIndex()).getLocation().equals("Shop")) {
+            if (inputArray0.get(
+                    recComboBox.getSelectedIndex()).getLocation().equals("Shop")
+            ) {
                 locComboBox.setSelectedIndex(0);
             } else {
                 locComboBox.setSelectedIndex(1);
             }
         }
-        priceField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
+        priceField.setText(
+                df.format(inputArray0.get(recComboBox.getSelectedIndex()).getPrice())
+        );
         if (menuType == 2) {
-            if (inputArray0.get(recComboBox.getSelectedIndex()).getPaymentType().equals("Credit Card")) {
+            if (inputArray0.get(
+                    recComboBox.getSelectedIndex())
+                    .getPaymentType()
+                    .equals("Credit Card")
+            ) {
                 payComboBox.setSelectedIndex(0);
             } else {
                 payComboBox.setSelectedIndex(1);
             }
         }
         // Enable card number field if Credit Card is selected from the combo box.
-        cardField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber());
+        cardField.setText(
+                inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber()
+        );
         if (menuType == 1) {
             if (!inputArray1.isEmpty()) {
-                amountField.setText(df.format(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity() *
-                        inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
+                amountField.setText(
+                        df.format(inputArray1.get(
+                                recComboBox.getSelectedIndex()).getQuantity() *
+                        inputArray0.get(recComboBox.getSelectedIndex()).getPrice())
+                );
             }
         }
         if (menuType == 1) {
-            quantityField.setText(Integer.toString(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity()));
-            amountField.setText(df.format(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
+            quantityField.setText(
+                    Integer.toString(inputArray1.get(
+                            recComboBox.getSelectedIndex()).getQuantity()
+                    )
+            );
+            amountField.setText(
+                    df.format(inputArray1.get(recComboBox.getSelectedIndex()).getAmount())
+            );
         } else {
-            amountField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getAmount()));
+            amountField.setText(
+                    df.format(inputArray0.get(recComboBox.getSelectedIndex()).getAmount())
+            );
         }
         // Disable text field editing of inventory data for Sales menu
         if (menuType == 1) {
@@ -184,10 +218,13 @@ public class EditOps extends JFrame {
             supplierField.setEditable(false);
             priceField.setEditable(false);
             // Disable editing for items not present in the shop
-            if (inputArray0.get(recComboBox.getSelectedIndex()).getLocation().equals("Warehouse")) {
+            if (inputArray0.get(
+                    recComboBox.getSelectedIndex()).getLocation().equals("Warehouse")
+            ) {
                 JFrame alert = new JFrame();
                 JOptionPane.showMessageDialog(alert,
-                        "Cannot edit the selected Record #. The selected item is not present at the shop.",
+                        "Cannot edit the selected Record #." +
+                                "The selected item is not present at the shop.",
                         "warning",
                         JOptionPane.WARNING_MESSAGE
                 );
@@ -202,38 +239,73 @@ public class EditOps extends JFrame {
         }
 
         recComboBox.addActionListener(e -> {
-            idField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getID());
-            nameField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getName());
-            supplierField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getSupplier());
-            stockField.setText(Integer.toString(inputArray0.get(recComboBox.getSelectedIndex()).getStock()));
+            idField.setText(
+                    inputArray0.get(recComboBox.getSelectedIndex()).getID()
+            );
+            nameField.setText(
+                    inputArray0.get(recComboBox.getSelectedIndex()).getName()
+            );
+            supplierField.setText(
+                    inputArray0.get(recComboBox.getSelectedIndex()).getSupplier()
+            );
+            stockField.setText(
+                    Integer.toString(inputArray0.get(
+                            recComboBox.getSelectedIndex()).getStock()
+                    )
+            );
             if (menuType == 0) {
-                if (inputArray0.get(recComboBox.getSelectedIndex()).getLocation().equals("Shop")) {
+                if (inputArray0.get(
+                        recComboBox.getSelectedIndex()).getLocation().equals("Shop")
+                ) {
                     locComboBox.setSelectedIndex(0);
                 } else {
                     locComboBox.setSelectedIndex(1);
                 }
             }
-            priceField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
+            priceField.setText(
+                    df.format(inputArray0.get(recComboBox.getSelectedIndex()).getPrice())
+            );
             if (menuType == 2) {
-                if (inputArray0.get(recComboBox.getSelectedIndex()).getPaymentType().equals("Credit Card")) {
+                if (inputArray0.get(
+                        recComboBox.getSelectedIndex())
+                        .getPaymentType()
+                        .equals("Credit Card")
+                ) {
                     payComboBox.setSelectedIndex(0);
                 } else {
                     payComboBox.setSelectedIndex(1);
                 }
             }
             // Enable card number field if Credit Card is selected from the combo box.
-            cardField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber());
+            cardField.setText(
+                    inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber()
+            );
             if (menuType == 1) {
                 if (!inputArray1.isEmpty()) {
-                    amountField.setText(df.format(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity() *
-                            inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
+                    amountField.setText(
+                            df.format(inputArray1.get(
+                                    recComboBox.getSelectedIndex()).getQuantity() *
+                            inputArray0.get(recComboBox.getSelectedIndex()).getPrice())
+                    );
                 }
             }
             if (menuType == 1) {
-                quantityField.setText(Integer.toString(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity()));
-                amountField.setText(df.format(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
+                quantityField.setText(
+                        Integer.toString(inputArray1.get(
+                                recComboBox.getSelectedIndex()).getQuantity()
+                        )
+                );
+                amountField.setText(
+                        df.format(inputArray1.get(
+                                recComboBox.getSelectedIndex()).getAmount()
+                        )
+                );
             } else {
-                amountField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getAmount()));
+                amountField.setText(
+                        df.format(inputArray0.get(
+                                recComboBox.getSelectedIndex()).getAmount()
+                        )
+                );
             }
             // Disable text field editing of inventory data for Sales menu
             if (menuType == 1) {
@@ -242,10 +314,13 @@ public class EditOps extends JFrame {
                 supplierField.setEditable(false);
                 priceField.setEditable(false);
                 // Disable editing for items not present in the shop
-                if (inputArray0.get(recComboBox.getSelectedIndex()).getLocation().equals("Warehouse")) {
+                if (inputArray0.get(
+                        recComboBox.getSelectedIndex()).getLocation().equals("Warehouse")
+                ) {
                     JFrame alert = new JFrame();
                     JOptionPane.showMessageDialog(alert,
-                            "Cannot edit the selected Record #. The selected item is not present at the shop.",
+                            "Cannot edit the selected Record #. " +
+                                    "The selected item is not present at the shop.",
                             "Alert",
                             JOptionPane.WARNING_MESSAGE
                     );
@@ -383,7 +458,11 @@ public class EditOps extends JFrame {
      * @param inputArray0 input first ArrayList
      * @param inputArray1 input second ArrayList
      */
-    public static void launchUI(int menuType, ArrayList<DataTypes> inputArray0, ArrayList<DataTypes> inputArray1) {
+    public static void launchUI(
+            int menuType,
+            ArrayList<DataTypes> inputArray0,
+            ArrayList<DataTypes> inputArray1
+    ) {
         JFrame frame = new EditOps("Edit", menuType, inputArray0, inputArray1);
         frame.setVisible(true);
     }

@@ -40,12 +40,17 @@ public class DeleteOps extends JFrame {
 
     /**
      * Creates the GUI and its declared Swing components.
-     * @param title set window title.
-     * @param menuType the type of menu where DeleteOps was instantiated from.
-     * @param inputArray0 first ArrayList input.
-     * @param inputArray1 second Arraylist input, set to null when working with only one arraylist.
+     * @param title Title name for the window.
+     * @param menuType The type of menu where DeleteOps was instantiated from.
+     * @param inputArray0 First ArrayList input.
+     * @param inputArray1 Second Arraylist input, set to null when working with only one ArrayList.
      */
-    public DeleteOps(String title, int menuType, ArrayList<DataTypes> inputArray0, ArrayList<DataTypes> inputArray1) {
+    public DeleteOps(
+            String title,
+            int menuType,
+            ArrayList<DataTypes> inputArray0,
+            ArrayList<DataTypes> inputArray1
+    ) {
         super(title);
         this.setContentPane(mainPanel);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -156,24 +161,50 @@ public class DeleteOps extends JFrame {
         }
 
         // Fill the text fields/combo boxes corresponding to the selected record #.
-        idField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getID());
-        nameField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getName());
-        supplierField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getSupplier());
-        stockField.setText(Integer.toString(inputArray0.get(recComboBox.getSelectedIndex()).getStock()));
-        locationField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getLocation());
-        priceField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
-        payTypeField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getPaymentType());
-        cardField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber());
+        idField.setText(
+                inputArray0.get(recComboBox.getSelectedIndex()).getID()
+        );
+        nameField.setText(
+                inputArray0.get(recComboBox.getSelectedIndex()).getName()
+        );
+        supplierField.setText(
+                inputArray0.get(recComboBox.getSelectedIndex()).getSupplier()
+        );
+        stockField.setText(
+                Integer.toString(inputArray0.get(recComboBox.getSelectedIndex()).getStock())
+        );
+        locationField.setText(
+                inputArray0.get(recComboBox.getSelectedIndex()).getLocation()
+        );
+        priceField.setText(
+                df.format(inputArray0.get(recComboBox.getSelectedIndex()).getPrice())
+        );
+        payTypeField.setText(
+                inputArray0.get(recComboBox.getSelectedIndex()).getPaymentType()
+        );
+        cardField.setText(
+                inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber()
+        );
         if (menuType == 1) {
-            quantityField.setText(Integer.toString(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity()));
-            amountField.setText(df.format(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
+            quantityField.setText(
+                    Integer.toString(inputArray1.get(
+                            recComboBox.getSelectedIndex()).getQuantity()
+                    )
+            );
+            amountField.setText(
+                    df.format(inputArray1.get(recComboBox.getSelectedIndex()).getAmount())
+            );
         } else {
-            amountField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getAmount()));
+            amountField.setText(
+                    df.format(inputArray0.get(recComboBox.getSelectedIndex()).getAmount())
+            );
         }
 
         recComboBox.addActionListener(e -> {
             if (menuType == 1) {
-                if (inputArray1.get(recComboBox.getSelectedIndex()).getQuantity() == 0) {
+                if (inputArray1.get(
+                        recComboBox.getSelectedIndex()).getQuantity() == 0
+                ) {
                     JFrame warning = new JFrame();
                     JOptionPane.showMessageDialog(
                             warning,
@@ -184,19 +215,49 @@ public class DeleteOps extends JFrame {
                     deleteButton.setEnabled(false);
                 }
             }
-            idField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getID());
-            nameField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getName());
-            supplierField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getSupplier());
-            stockField.setText(Integer.toString(inputArray0.get(recComboBox.getSelectedIndex()).getStock()));
-            locationField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getLocation());
-            priceField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getPrice()));
-            payTypeField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getPaymentType());
-            cardField.setText(inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber());
+            idField.setText(
+                    inputArray0.get(recComboBox.getSelectedIndex()).getID()
+            );
+            nameField.setText(
+                    inputArray0.get(recComboBox.getSelectedIndex()).getName()
+            );
+            supplierField.setText(
+                    inputArray0.get(recComboBox.getSelectedIndex()).getSupplier()
+            );
+            stockField.setText(
+                    Integer.toString(
+                            inputArray0.get(recComboBox.getSelectedIndex()).getStock()
+                    )
+            );
+            locationField.setText(
+                    inputArray0.get(recComboBox.getSelectedIndex()).getLocation()
+            );
+            priceField.setText(
+                    df.format(inputArray0.get(recComboBox.getSelectedIndex()).getPrice())
+            );
+            payTypeField.setText(
+                    inputArray0.get(recComboBox.getSelectedIndex()).getPaymentType()
+            );
+            cardField.setText(
+                    inputArray0.get(recComboBox.getSelectedIndex()).getCardNumber()
+            );
             if (menuType == 1) {
-                quantityField.setText(Integer.toString(inputArray1.get(recComboBox.getSelectedIndex()).getQuantity()));
-                amountField.setText(df.format(inputArray1.get(recComboBox.getSelectedIndex()).getAmount()));
+                quantityField.setText(
+                        Integer.toString(inputArray1.get(
+                                recComboBox.getSelectedIndex()).getQuantity()
+                        )
+                );
+                amountField.setText(
+                        df.format(
+                                inputArray1.get(recComboBox.getSelectedIndex()).getAmount()
+                        )
+                );
             } else {
-                amountField.setText(df.format(inputArray0.get(recComboBox.getSelectedIndex()).getAmount()));
+                amountField.setText(
+                        df.format(
+                                inputArray0.get(recComboBox.getSelectedIndex()).getAmount()
+                        )
+                );
             }
         });
 
@@ -222,7 +283,11 @@ public class DeleteOps extends JFrame {
      * @param inputArray0 input first ArrayList
      * @param inputArray1 input second ArrayList
      */
-    public static void launchUI(int menuType, ArrayList<DataTypes> inputArray0, ArrayList<DataTypes> inputArray1) {
+    public static void launchUI(
+            int menuType,
+            ArrayList<DataTypes> inputArray0,
+            ArrayList<DataTypes> inputArray1
+    ) {
         JFrame frame = new DeleteOps("Delete", menuType, inputArray0, inputArray1);
         frame.setVisible(true);
     }

@@ -16,18 +16,21 @@ import java.util.Date;
  * Transactions GUI
  */
 public class Transactions extends JFrame {
-    private static final DecimalFormat df = new DecimalFormat("#0.00"); // Decimal formatting for currency
+    // Decimal formatting for currency
+    private static final DecimalFormat df = new DecimalFormat("#0.00");
     private static final FileOps transactionsFile = new FileOps();
     private static DataTypes data;
     private static final ArrayList<DataTypes> transactionsArray = new ArrayList<>();
-    private static boolean saved = true; // Flag that determines whether changes have been made to the table
+    // Flag that determines whether changes have been made to the table
+    private static boolean saved = true;
     private static final DefaultTableModel tableData = new DefaultTableModel();
     private static final Object[] row = new Object[6];
     private static LocalDate currentDate;
     private static String fileDate;
     private static int prevDayCount = 0;
     private static int nextDayCount = 0;
-    private static final int menuType = 2; // 0 = Inventory, 1 = Sales, 2 = Transactions
+    // 0 = Inventory, 1 = Sales, 2 = Transactions.
+    private static final int menuType = 2;
 
     private JButton menuButton;
     private JButton addButton;
@@ -46,7 +49,7 @@ public class Transactions extends JFrame {
 
     /**
      * Creates the GUI and its declared Swing components.
-     * @param title set window title.
+     * @param title Title name for the window.
      */
     public Transactions(String title) {
         super(title);
@@ -61,7 +64,8 @@ public class Transactions extends JFrame {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
                 int option = JOptionPane.showConfirmDialog(confirmExit,
-                        "Are you sure you want to exit? Any unsaved changes will be lost.",
+                        "Are you sure you want to exit? " +
+                                "Any unsaved changes will be lost.",
                         "Exit", JOptionPane.YES_NO_OPTION);
                 if (option == JOptionPane.YES_OPTION) {
                     System.out.println("INFO: The program closed successfully.");
@@ -103,19 +107,20 @@ public class Transactions extends JFrame {
             if (saved) {
                 System.out.println("INFO: Entered Main Menu.");
                 // Clear all arrays
-                transactionsFile.getBuffer().clear();
+                transactionsFile.getInputBuffer().clear();
                 transactionsArray.clear();
                 MainMenu.launchUI();
                 dispose();
             } else {
                 int option = JOptionPane.showConfirmDialog(confirmExit,
-                        "Changes were made to the database. Any unsaved data will be lost. Do you want to continue?",
+                        "Changes were made to the database. " +
+                                "Any unsaved data will be lost. Do you want to continue?",
                         "Unsaved Changes", JOptionPane.YES_NO_OPTION);
                 if (option == JOptionPane.YES_OPTION) {
                     System.out.println("WARNING: Changes in the table were not saved.");
                     System.out.println("INFO: Entered Main Menu.");
                     // Clear all arrays
-                    transactionsFile.getBuffer().clear();
+                    transactionsFile.getInputBuffer().clear();
                     transactionsArray.clear();
                     saved = true;
                     MainMenu.launchUI();
@@ -176,7 +181,7 @@ public class Transactions extends JFrame {
             readFile.setText("Read File: transactions_" + fileDate + ".csv");
             tableDateLabel.setText("Date: " + fileDate);
             try {
-                transactionsFile.getBuffer().clear(); // clear buffer
+                transactionsFile.getInputBuffer().clear(); // clear buffer
                 transactionsArray.clear();
                 transactions();
                 printTable();
@@ -200,7 +205,7 @@ public class Transactions extends JFrame {
             readFile.setText("Read File: transactions_" + fileDate + ".csv");
             tableDateLabel.setText("Date: " + fileDate);
             try {
-                transactionsFile.getBuffer().clear(); // clear buffer
+                transactionsFile.getInputBuffer().clear(); // clear buffer
                 transactionsArray.clear();
                 transactions();
                 printTable();
@@ -224,7 +229,7 @@ public class Transactions extends JFrame {
             readFile.setText("Read File: transactions_" + fileDate + ".csv");
             tableDateLabel.setText("Date: " + fileDate);
             try {
-                transactionsFile.getBuffer().clear(); // clear buffer
+                transactionsFile.getInputBuffer().clear(); // clear buffer
                 transactionsArray.clear();
                 transactions();
                 printTable();
@@ -259,17 +264,30 @@ public class Transactions extends JFrame {
         transactionsFile.setFile(Main.transactionsDir,"transactions_" + fileDate + ".csv");
 
         // Remove first row if column headers exist
-        if (!transactionsFile.getBuffer().isEmpty() && transactionsFile.getBuffer().get(0).get(0).equals("ID")) {
-            transactionsFile.getBuffer().remove(0);
+        if (
+                !transactionsFile.getInputBuffer().isEmpty() &&
+                transactionsFile.getInputBuffer().get(0).get(0).equals("ID")
+        ) {
+            transactionsFile.getInputBuffer().remove(0);
         }
 
-        for (int i = 0; i < transactionsFile.getBuffer().size(); i++) {
+        for (int i = 0; i < transactionsFile.getInputBuffer().size(); i++) {
             data = new DataTypes();
-            data.setID(transactionsFile.getBuffer().get(i).get(0));
-            data.setName(transactionsFile.getBuffer().get(i).get(1));
-            data.setPaymentType(transactionsFile.getBuffer().get(i).get(2));
-            data.setCardNumber(transactionsFile.getBuffer().get(i).get(3));
-            data.setAmount(Double.parseDouble(transactionsFile.getBuffer().get(i).get(4)));
+            data.setID(
+                    transactionsFile.getInputBuffer().get(i).get(0)
+            );
+            data.setName(
+                    transactionsFile.getInputBuffer().get(i).get(1)
+            );
+            data.setPaymentType(
+                    transactionsFile.getInputBuffer().get(i).get(2)
+            );
+            data.setCardNumber(
+                    transactionsFile.getInputBuffer().get(i).get(3)
+            );
+            data.setAmount(
+                    Double.parseDouble(transactionsFile.getInputBuffer().get(i).get(4))
+            );
             transactionsArray.add(data);
         }
     }
@@ -279,19 +297,23 @@ public class Transactions extends JFrame {
      */
     private static void printTable() {
         // Table column headers
-        System.out.println("--------------------------------------------------------------------------------");
+        System.out.println("-----------------------------------------" +
+                "---------------------------------------");
         System.out.printf("| %10s | %10s | %10s | %11s | %10s | %10s |\n",
                 "Record #", "ID", "Name", "Pay Type", "Card Num", "Amount"
         );
-        System.out.println("--------------------------------------------------------------------------------");
+        System.out.println("-----------------------------------------" +
+                "---------------------------------------");
 
-        if (transactionsFile.getBuffer().isEmpty() && transactionsArray.isEmpty()) {
+        if (transactionsFile.getInputBuffer().isEmpty() && transactionsArray.isEmpty()) {
 
-            System.out.println("WARNING: Database is empty. There are no records in this database.");
+            System.out.println("WARNING: Database is empty. " +
+                    "There are no records in this database.");
             JFrame alert = new JFrame();
             JOptionPane.showMessageDialog(
                     alert,
-                    "File not found or database is empty. There are no records in this database.",
+                    "File not found or database is empty. " +
+                            "There are no records in this database.",
                     "Alert", JOptionPane.WARNING_MESSAGE
             );
         } else {
@@ -307,7 +329,8 @@ public class Transactions extends JFrame {
                 );
             }
         }
-        System.out.println("--------------------------------------------------------------------------------");
+        System.out.println("----------------------------------------" +
+                "----------------------------------------");
     }
 
     /**
@@ -383,7 +406,6 @@ public class Transactions extends JFrame {
      * @throws IOException IO error handling
      */
     private static void saveData() throws IOException {
-
         FileWriter csvWriter = new FileWriter(
                 new File(Main.transactionsDir,"transactions_" + fileDate + ".csv")
         );
@@ -406,7 +428,9 @@ public class Transactions extends JFrame {
         csvWriter.close();
         System.out.println("Changes saved!");
         JFrame message = new JFrame();
-        JOptionPane.showMessageDialog(message, "The data in the table was saved successfully.");
+        JOptionPane.showMessageDialog(message,
+                "The data in the table was saved successfully."
+        );
     }
 
     /**
@@ -417,7 +441,7 @@ public class Transactions extends JFrame {
     public static void launchUI() throws IOException {
         System.out.println("=====TRANSACTIONS MENU=====");
         // Making sure all arrays are cleared
-        transactionsFile.getBuffer().clear();
+        transactionsFile.getInputBuffer().clear();
         transactionsArray.clear();
         // Default to today's time
         currentDate = LocalDate.now();

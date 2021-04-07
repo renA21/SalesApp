@@ -18,8 +18,8 @@ public class MainMenu extends JFrame {
     private JLabel dateLabel;
 
     /**
-     * Creates the GUI and its declared Swing components
-     * @param title set window title
+     * Creates the GUI and its declared Swing components.
+     * @param title Title name for the window.
      */
     public MainMenu(String title) {
         super(title);
