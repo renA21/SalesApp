@@ -1,2 +1,2 @@
 # SalesApp
-A inventory management program written in Java for a CompSci project.
+An inventory management program.
